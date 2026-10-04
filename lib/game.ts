@@ -3,7 +3,8 @@ export type Color='red'|'yellow'|'green'|'blue'|'pink'|'teal'|'orange'|'purple'|
 export type Face={color:Color;kind:string;n?:number;alt?:Color;flex?:string;power?:boolean};
 export type Card={id:string;a:Face;b?:Face};
 export type Player={name:string;avatar:number;hand:Card[];power:boolean;score:number;called:boolean};
-export type Event={id:number;type:string;text:string;actor?:number;amount?:number};
+export type EasterEgg=0|1|2|3;
+export type Event={id:number;type:string;text:string;actor?:number;amount?:number;cameo?:EasterEgg};
 export type Pending={amount:number;kind:string;source:number;target:number;color?:Color;illegal?:boolean;proof?:Face[];challenge:boolean};
 export type Game={mode:Mode;players:Player[];deck:Card[];discard:Card[];side:0|1;color:Color;dir:1|-1;turn:number;dealer:number;round:number;phase:'playing'|'color'|'over';stacking:boolean;match500:boolean;pending:Pending|null;drawn:string|null;unoVulnerable:number|null;out:number|null;winner:number|null;matchWinner:number|null;events:Event[];eventId:number;revision:number;reveal:{viewer:number;faces:Face[]}|null};
 export type Action={type:'play'|'draw'|'pass'|'uno'|'catch'|'challenge'|'accept'|'color';id?:string;flex?:boolean;color?:Color;target?:number;uno?:boolean};
@@ -12,6 +13,11 @@ export const DARK:Color[]=['pink','teal','orange','purple'];
 export const COLOR_NAMES:Record<Color,string>={red:'红',yellow:'黄',green:'绿',blue:'蓝',pink:'粉',teal:'青',orange:'橙',purple:'紫',wild:'万能'};
 export const KINDS:Record<string,string>={number:'数字',skip:'跳过',reverse:'反转',draw1:'加一',draw2:'加二',draw5:'加五',wild:'变色',wild2:'万能加二',wild4:'万能加四',flip:'翻面',skipAll:'全体跳过',wildColor:'抽至指定色',target2:'定向加二',all2:'全体加二',allFlip:'全体能量翻转'};
 export function face(card:Card,side=0):Face{return side===1&&card.b?card.b:card.a}
+// Presentation only: sevens hide four cameos. Each FLIP face is decorated independently.
+export function cardEasterEgg(f:Face):EasterEgg|undefined{
+ if(f.kind!=='number'||f.n!==7)return undefined;
+ return ({red:0,green:1,blue:2,yellow:3,pink:0,orange:1,purple:2,teal:3} as Partial<Record<Color,EasterEgg>>)[f.color];
+}
 export function label(f:Face){return `${COLOR_NAMES[f.color]}色 ${f.kind==='number'?f.n:KINDS[f.kind]??f.kind}`}
 export function colors(g:Pick<Game,'mode'|'side'>){return g.mode==='flip'&&g.side===1?DARK:LIGHT}
 export function shuffled<T>(a:T[],rng= Math.random){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
@@ -111,6 +117,7 @@ export function applyAction(original:Game,actor:number,a:Action):Game{
  const oldPending=g.pending;g.pending=null;g.unoVulnerable=null;g.reveal=null;g.drawn=null;p.hand.splice(idx,1);g.discard.push(card);g.color=f.color==='wild'?a.color!:f.color;
  if(flex){p.power=false;event(g,'flex',`${p.name} 发动 FLEX 强化！`,actor)}
  event(g,'play',`${p.name} 打出${label(f)}${flex?' · 强化':''}`,actor);
+ const cameo=cardEasterEgg(f);if(cameo!==undefined)g.events[g.events.length-1].cameo=cameo;
  if(f.power){p.power=!p.power;event(g,'power',`${p.name} 的能量翻转为${p.power?'可用':'耗尽'}`,actor)}
  if(f.kind==='allFlip'){g.players.forEach(v=>v.power=!v.power);event(g,'power','全员能量翻转',actor)}
  let steps=1;

@@ -1,4 +1,4 @@
-# UNO 游戏开发部
+# UNO CLUB
 
 三个独立页面：`/` 经典 UNO、`/flip` UNO FLIP、`/flex` UNO FLEX。
 
@@ -49,7 +49,8 @@ node tests/room.test.mjs
 
 ## 素材
 
-- 头像：内置 imagegen 一次生成的同人插画；public/avatars.png，提示词 public/avatar-prompt.txt。
+- 卡牌彩蛋：桃井、小绿、爱丽丝、柚子藏在四种颜色的数字 7 中，每副牌每面 8 张。仅改变卡面和出牌闪光，不影响数字、颜色、FLEX 副色、能量或规则。玩家使用座位编号和自定义昵称。设置中可预览。
+- 彩蛋插画：内置 imagegen 一次生成的同人素材；public/card-easter-eggs.png。原始生成提示词保留在 public/card-art-prompt.txt，图集现仅用于卡面。
 - UNO牌面参考与下载素材：Dmitry Fomin / Wikimedia Commons / CC0 1.0，public/uno-cards-cc0.svg。
 - 动态牌面为代码绘制的游戏UI；图标 Lucide（ISC）。
 - UNO 与蔚蓝档案角色相关权利归各自权利人。本项目是非官方同人练习。

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "UNO · 游戏开发部",
+  title: "UNO CLUB · 四人牌桌",
   description: "四人在线与同屏牌局：经典 UNO、UNO FLIP 与 UNO FLEX。",
   icons: {
     icon: "/favicon.svg",
