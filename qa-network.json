@@ -1,0 +1,36 @@
+{
+  "testedAt": "2026-10-04T12:29:28.501Z",
+  "environment": "local Cloudflare D1 preview",
+  "results": [
+    {
+      "mode": "classic",
+      "clients": 4,
+      "actions": 20,
+      "privacy": "passed",
+      "turnAuthorization": "passed",
+      "optimisticConcurrency": "passed",
+      "idempotency": "passed",
+      "reconnect": "passed"
+    },
+    {
+      "mode": "flip",
+      "clients": 4,
+      "actions": 20,
+      "privacy": "passed",
+      "turnAuthorization": "passed",
+      "optimisticConcurrency": "passed",
+      "idempotency": "passed",
+      "reconnect": "passed"
+    },
+    {
+      "mode": "flex",
+      "clients": 4,
+      "actions": 20,
+      "privacy": "passed",
+      "turnAuthorization": "passed",
+      "optimisticConcurrency": "passed",
+      "idempotency": "passed",
+      "reconnect": "passed"
+    }
+  ]
+}
