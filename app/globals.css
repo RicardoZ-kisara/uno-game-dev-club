@@ -21,8 +21,13 @@
 .seat-badge{display:grid;place-items:center;font:800 17px Consolas,monospace;letter-spacing:-1px;background:linear-gradient(145deg,#26394d,#142133);border-color:#42586d;color:#c1d3e1;box-shadow:inset 0 0 0 3px #132031,0 3px 12px #0002}
 .seat.current .seat-badge{border-color:var(--accent);color:var(--accent)}
 .handoff .seat-badge{font-size:29px}.hand-owner .seat-badge{font-size:12px}
-.cameo-0{--cameo-glow:#ff9ed7;--cameo-position:0 0}.cameo-1{--cameo-glow:#b1f990;--cameo-position:100% 0}.cameo-2{--cameo-glow:#8bdfff;--cameo-position:0 100%}.cameo-3{--cameo-glow:#ffd387;--cameo-position:100% 100%}
-.cameo-art{display:block;background-image:url('/card-easter-eggs.png');background-size:200% 200%;background-position:var(--cameo-position);background-repeat:no-repeat}
+/* Official source files are unchanged; CSS crops only. See /portraits/sources.json. */
+.cameo-0{--cameo-glow:#ff9ed7;--cameo-image:url("/portraits/momoi.png");--cameo-size:496.5854% auto;--cameo-position:53.8130% 12.6221%}
+.cameo-1{--cameo-glow:#b1f990;--cameo-image:url("/portraits/midori.png");--cameo-size:496.5854% auto;--cameo-position:45.2030% 13.8436%}
+.cameo-2{--cameo-glow:#8bdfff;--cameo-image:url("/portraits/aris.png");--cameo-size:509.0000% auto;--cameo-position:50.1222% 10.5008%}
+.cameo-3{--cameo-glow:#ffd387;--cameo-image:url("/portraits/yuzu.jpg");--cameo-size:512.0000% auto;--cameo-position:72.3301% 6.3830%}
+.cameo-4{--cameo-glow:#efa9ff;--cameo-image:url("/portraits/kei.jpg");--cameo-size:382.9787% auto;--cameo-position:49.6241% 20.7254%}
+.cameo-art{display:block;background-image:var(--cameo-image);background-size:var(--cameo-size);background-position:var(--cameo-position);background-repeat:no-repeat}
 .egg-card{overflow:hidden}
 .egg-card .card-portrait{position:absolute;left:0;right:0;top:13%;aspect-ratio:1;mask-image:linear-gradient(transparent,#000 9%,#000 83%,transparent)}
 .egg-card .card-oval{inset:auto auto 14% 9%!important;border:0;border-radius:0;background:none;transform:rotate(-9deg);font-size:32px!important;line-height:1;text-shadow:2px 2px 0 #102033,-1px -1px 0 #102033;color:white;z-index:2}
@@ -45,7 +50,6 @@
 @keyframes foil-glint{from{translate:-110% 0}to{translate:110% 0}}
 @media(max-width:720px){.seat .seat-badge{font-size:14px}.egg-card .card-oval{font-size:26px!important}.egg-card .cameo-signature{font-size:7px;left:22%;right:12%}.egg-gallery{gap:10px}.egg-gallery .playing-card{border-width:3px}.egg-gallery .card-corner{font-size:17px}.egg-gallery .cameo-signature{font-size:8px}}
 @media(max-width:400px){.egg-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;padding:12px 26px}.egg-gallery .cameo-signature{font-size:10px}}
-.cameo-4{--cameo-glow:#efa9ff;--cameo-position:50% 50%}.cameo-art.cameo-4{background-image:url('/kei-portrait.png');background-size:100% 100%}
 .egg-card .card-oval svg{width:26px!important;height:26px!important;transform:none}.egg-card .card-oval small{font-size:13px;bottom:0;right:-16px;transform:none}.egg-card .card-oval:has(small){left:5%!important;bottom:16%!important}
 .egg-card .card-oval .wild-diamond{height:26px;width:22px}.egg-card.color-wild{background:#182333;border-color:#d4d0ed}.egg-card.color-wild .card-portrait{top:10%}.egg-card.color-wild .card-oval{font-size:27px!important;bottom:15%!important}
 .egg-gallery{grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.egg-gallery .playing-card .card-corner{font-size:16px}.egg-gallery .cameo-signature{font-size:8px}

@@ -1,0 +1,96 @@
+{
+  "verifiedAt": "2026-10-04",
+  "note": "官方原图原样保存；只通过 CSS 缩放和裁切显示大头照，无 AI 生成、重绘或补绘。素材权利归原权利人，不属于项目代码或 UNO SVG 的开源许可。crop 为原图像素中的 [x,y,正方形边长]。",
+  "assets": [
+    {
+      "character": "桃井 / Momoi",
+      "file": "momoi.png",
+      "source": "https://webcnstatic.yostar.net/ba_cn_web/prod/web/assets/momoi.2aa07a74.png",
+      "publication": "https://bluearchive-cn.com/",
+      "publisher": "Yostar 国服官网",
+      "dimensions": [
+        2036,
+        1638
+      ],
+      "crop": [
+        875,
+        155,
+        410
+      ],
+      "sha256": "2aa07a74e184d93a462997bfad5e0d1446d9ff74b377fe0317a4c5756d4aeb94",
+      "bytes": 1008483
+    },
+    {
+      "character": "小绿 / Midori",
+      "file": "midori.png",
+      "source": "https://webcnstatic.yostar.net/ba_cn_web/prod/web/assets/midori.9eae1a3c.png",
+      "publication": "https://bluearchive-cn.com/",
+      "publisher": "Yostar 国服官网",
+      "dimensions": [
+        2036,
+        1638
+      ],
+      "crop": [
+        735,
+        170,
+        410
+      ],
+      "sha256": "9eae1a3c242114f9edbc01d56aa92cdb70087617a19f6bf75a260657f7bd8799",
+      "bytes": 925959
+    },
+    {
+      "character": "爱丽丝 / Aris",
+      "file": "aris.png",
+      "source": "https://webcnstatic.yostar.net/ba_cn_web/prod/web/assets/aris.740714b6.png",
+      "publication": "https://bluearchive-cn.com/",
+      "publisher": "Yostar 国服官网",
+      "dimensions": [
+        2036,
+        1638
+      ],
+      "crop": [
+        820,
+        130,
+        400
+      ],
+      "sha256": "740714b6b7cf777f37a697ab08c525f937c6490f533a74a9b29ccbb2c3257077",
+      "bytes": 1473638
+    },
+    {
+      "character": "柚子 / Yuzu",
+      "file": "yuzu.jpg",
+      "source": "https://www.4gamer.net/games/519/G051983/20210515010/SS/001.jpg",
+      "publication": "https://www.4gamer.net/games/519/G051983/20210515010/",
+      "publisher": "Yostar 官方新闻稿，由 4Gamer 原文转载（2021-05-15）",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "crop": [
+        745,
+        30,
+        250
+      ],
+      "sha256": "a80a4037d0f0032c753c2141eff0129cad2b61e50e1e86306e74faa6370396f9",
+      "bytes": 217932
+    },
+    {
+      "character": "Kei",
+      "file": "kei.jpg",
+      "source": "https://pbs.twimg.com/media/G_js3dDaYAI_FX9.jpg",
+      "publication": "https://x.com/Blue_ArchiveJP/status/2015621284898775451",
+      "publisher": "Blue_ArchiveJP 日服官方账号角色介绍",
+      "dimensions": [
+        900,
+        1200
+      ],
+      "crop": [
+        330,
+        200,
+        235
+      ],
+      "sha256": "508058d4f86fa01a0633bacb88621c8d9387bc5608aa1ac0161e352cc1a30349",
+      "bytes": 196641
+    }
+  ]
+}

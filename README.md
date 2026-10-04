@@ -72,8 +72,9 @@ node tests/room.test.mjs
 ## 素材
 
 - 卡牌头像：红 / 粉色为桃井，绿 / 橙色为小绿，蓝 / 紫色为爱丽丝，黄 / 青色为柚子，所有万能牌为 Kei。覆盖数字牌和功能牌，FLIP 两面都按当前颜色对应。只改变卡面和出牌闪光，不影响规则。玩家仍使用座位编号和自定义昵称，在设置中可预览五张卡面。
-- 彩蛋插画：内置 imagegen 一次生成的同人素材；public/card-easter-eggs.png。原始生成提示词保留在 public/card-art-prompt.txt，图集现仅用于卡面。
-- Kei：使用内置 image_gen 生成，素材 `public/kei-portrait.png`，完整提示词 `public/kei-prompt.txt`。造型参考[官方角色介绍](https://x.com/Blue_ArchiveJP/status/2015621284898775451)，为非官方同人图。
+- 五位角色全部使用官方发布的原图，原文件保存在 public/portraits/，仅通过 CSS 缩放裁切显示大头照，没有生成或重绘。卡牌与出牌特效共用同一组图。
+- 桃井、小绿、爱丽丝：[国服官网](https://bluearchive-cn.com/)角色立绘；柚子：[Yostar 官方新闻稿 / 4Gamer 原文转载](https://www.4gamer.net/games/519/G051983/20210515010/)的宣传图；Kei：[日服官方角色介绍](https://x.com/Blue_ArchiveJP/status/2015621284898775451)。原图地址、发布来源、SHA-256 和取景坐标见 [sources.json](public/portraits/sources.json)。
+- 旧生成图及提示词已从当前源码和构建资源中移除。角色素材的权利归原权利人，不属于下方 UNO SVG 的 CC0 许可。
 - UNO牌面参考与下载素材：Dmitry Fomin / Wikimedia Commons / CC0 1.0，public/uno-cards-cc0.svg。
 - 动态牌面为代码绘制的游戏UI；图标 Lucide（ISC）。
 - UNO 与蔚蓝档案角色相关权利归各自权利人。本项目是非官方同人练习。
