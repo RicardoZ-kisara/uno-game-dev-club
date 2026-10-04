@@ -1,0 +1,27 @@
+import {spawnSync} from 'node:child_process';
+import {networkInterfaces} from 'node:os';
+import {isIP} from 'node:net';
+import {existsSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+process.chdir(fileURLToPath(new URL('..',import.meta.url)));
+const port=Number(process.env.UNO_PORT||process.env.PORT||3000);
+if(!Number.isInteger(port)||port<1024||port>65535)throw Error('UNO_PORT must be between 1024 and 65535.');
+const interfaces=Object.entries(networkInterfaces()).flatMap(([name,addresses])=>(addresses||[]).filter(a=>a.family==='IPv4'&&!a.internal).map(a=>({name,address:a.address})));
+const privateIp=ip=>/^10\./.test(ip)||/^192\.168\./.test(ip)||/^172\.(1[6-9]|2\d|3[01])\./.test(ip);
+const candidates=interfaces.filter(a=>privateIp(a.address)&&!/vpn|zerotier|tailscale|vethernet|vmware|virtualbox|docker|wsl|meta/i.test(a.name)).sort((a,b)=>Number(/wi-?fi|wlan|无线/i.test(b.name))-Number(/wi-?fi|wlan|无线/i.test(a.name)));
+const host=process.env.UNO_HOST||candidates[0]?.address||'127.0.0.1';
+if(isIP(host)!==4)throw Error('UNO_HOST must be an IPv4 address, e.g. 0.0.0.0 or your LAN address.');
+const origin=process.env.UNO_PUBLIC_ORIGIN||`http://${host==='0.0.0.0'?(candidates[0]?.address??'127.0.0.1'):host}:${port}`;
+const url=new URL(origin);
+if(!['http:','https:'].includes(url.protocol)||url.username||url.password||url.pathname!=='/'||url.search||url.hash)throw Error('UNO_PUBLIC_ORIGIN must be an HTTP(S) origin without a path.');
+process.env.UNO_LAN_ORIGIN=url.origin;
+process.env.UNO_DATA_DIR=resolve(process.env.UNO_DATA_DIR||'.uno-data');
+process.env.NEXT_TELEMETRY_DISABLED='1';
+if(!existsSync('node_modules/next'))throw Error('Run npm ci first.');
+function run(args){const result=spawnSync(process.execPath,['node_modules/next/dist/bin/next',...args],{stdio:'inherit',windowsHide:true});if(result.error)throw result.error;if(result.status!==0)process.exit(result.status??1)}
+if(process.argv.includes('--build'))run(['build','--webpack']);
+if(!existsSync('.next-node/BUILD_ID'))throw Error('Run npm run build:node first, or use npm run deploy.');
+console.log(`\nUNO CLUB · Node.js + SQLite\n四台设备打开 / Open on all devices: ${url.origin}\nClassic: ${url.origin}/\nFLIP: ${url.origin}/flip\nFLEX: ${url.origin}/flex\nDatabase: ${process.env.UNO_DATA_DIR}\nPress Ctrl+C to stop.\n`);
+run(['start','--hostname',host,'--port',String(port)]);

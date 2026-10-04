@@ -17,16 +17,15 @@ export function EggGallery({mode,onPreview}:{mode:Mode;onPreview:(cameo:EasterEg
  return <>{mode!=='classic'&&<div className="portrait-tabs" role="group" aria-label="卡面类型">{(mode==='flip'?['明面','暗面']:['数字与副色','强化功能牌']).map((title,i)=><button key={title} aria-pressed={variant===i} onClick={()=>setVariant(i)}>{title}</button>)}</div>}<div className="egg-gallery">{samples.map((f,i)=><PlayingCard key={`${mode}-${variant}-${i}`} card={{id:`preview-${i}`,a:f}} onClick={()=>onPreview(cardEasterEgg(f)!)}/>)}</div></>;
 }
 export function Symbol({f}:{f:Face}){if(f.kind==='number')return <>{f.n}</>;if(f.kind==='skip')return <Ban/>;if(f.kind==='reverse')return <Repeat2/>;if(f.kind==='flip')return <Rotate3d/>;if(f.kind==='skipAll')return <FastForward/>;if(f.kind==='allFlip')return <RefreshCw/>;if(f.kind==='target2')return <><Crosshair/><small>+2</small></>;if(f.kind==='all2')return <><Users/><small>+2</small></>;if(f.kind==='wild')return <span className="wild-diamond"/>;return <>{({draw1:'+1',draw2:'+2',draw5:'+5',wild2:'+2',wild4:'+4',wildColor:'+色'} as Record<string,string>)[f.kind]}</>}
-export function PlayingCard({card,side=0,disabled=false,playable=false,selected=false,onClick,style,small=false}:{card:Card;side?:number;disabled?:boolean;playable?:boolean;selected?:boolean;onClick?:()=>void;style?:CSSProperties;small?:boolean}){
+export function PlayingCard({card,side=0,disabled=false,playable=false,selected=false,onClick,onFocus,onBlur,ariaDescribedBy,style,small=false}:{card:Card;side?:number;disabled?:boolean;playable?:boolean;selected?:boolean;onClick?:()=>void;onFocus?:()=>void;onBlur?:()=>void;ariaDescribedBy?:string;style?:CSSProperties;small?:boolean}){
  const f=face(card,side),cameo=cardEasterEgg(f);
  const description=`${label(f)}${f.flex?' 可强化':''}${f.alt?` 副色${COLOR_NAMES[f.alt]}`:''}${f.power?' 翻转自身能量':''}${cameo!==undefined?` · ${CAMEOS[cameo]}`:''}`;
  const content=<>
-  {cameo!==undefined&&<><CameoArt cameo={cameo} className="card-portrait"/><span className="card-foil"/><span className="cameo-signature">✦ {CAMEOS[cameo]}</span></>}
+  {cameo!==undefined&&<><CameoArt cameo={cameo} className="card-portrait"/><span className="card-foil"/></>}
   <span className="card-corner"><Symbol f={f}/></span><span className="card-oval"><Symbol f={f}/></span><span className="card-corner bottom"><Symbol f={f}/></span>
   {f.flex&&<span className={`flex-mark ${f.alt?'color-'+f.alt:''}`}><Zap size={12}/>{f.alt?'':'FLEX'}</span>}
   {f.power&&<RefreshCw className="power-mark" size={13}/>}
-  <span className="card-color-code">{({red:'R',blue:'B',green:'G',yellow:'Y',pink:'P',teal:'T',orange:'O',purple:'V',wild:'W'})[f.color]}</span>
  </>;
  const cls=`playing-card color-${f.color} ${cameo!==undefined?`egg-card cameo-${cameo}`:''} ${playable?'playable':''} ${selected?'selected':''} ${small?'small-card':''}`;
- return onClick?<button className={cls} style={style} disabled={disabled} onClick={onClick} title={description} aria-label={`${description}${playable?' 可出牌':''}`}>{content}</button>:<div className={cls} style={style} role="img" aria-label={description}>{content}</div>;
+ return onClick?<button className={cls} style={style} disabled={disabled} onClick={onClick} onFocus={onFocus} onBlur={onBlur} aria-pressed={selected} aria-describedby={ariaDescribedBy} aria-label={`${description}${playable?' 可出牌':''}`}>{content}</button>:<div className={cls} style={style} role="img" aria-label={description}>{content}</div>;
 }

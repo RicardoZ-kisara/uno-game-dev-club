@@ -24,6 +24,10 @@ for(const mode of ['classic','flip','flex']){
   else{const legal=g.legal.find(l=>l.flex)||g.legal.find(l=>l.normal);if(legal)action={type:'play',id:legal.id,flex:legal.flex,color,target:(actor+1)%4,uno:true};else action={type:g.pending?'accept':g.drawn?'pass':'draw'}}
   const updated=await call({op:'action',code,revision:own.revision,requestId:crypto.randomUUID(),action},tokens[actor]);assert.equal(updated.status,200,JSON.stringify(updated.data));actions++;
   const observers=await Promise.all(tokens.map(t=>get(code,t)));assert.ok(observers.every(o=>o.status===200&&o.data.revision===updated.data.revision));assert.equal(new Set(observers.map(o=>o.data.game.top.id)).size,1);
+  if(mode==='flip')for(let who=0;who<4;who++)for(let other=0;other<4;other++){
+   const view=observers[who].data.game,ownHand=observers[other].data.game.players[other].hand;
+   assert.deepEqual(view.players[other].backs,who===other?[]:ownHand.map(c=>view.side===1?c.a:c.b));
+  }
  }
  const reconnect=await get(code,tokens[2]);assert.equal(reconnect.data.viewer,2);assert.equal(reconnect.data.game.players[2].hand.length,reconnect.data.game.players[2].count);
  // Switching devices preserves the game and hands, but changes who may operate it.
@@ -56,4 +60,4 @@ const left=await call({op:'leave',code:lobby.data.code,revision:sharedLobby.data
 const promoted=(await get(lobby.data.code,guest.data.token)).data;assert.equal(promoted.host,1);
 const newStart=await call({op:'start',code:lobby.data.code,revision:promoted.revision,requestId:crypto.randomUUID()},guest.data.token);assert.equal(newStart.status,200,JSON.stringify(newStart.data));assert.ok(newStart.data.game);
 console.log('shared lobby host handoff passed');
-await writeFile(new URL('../qa-network.json',import.meta.url),JSON.stringify({testedAt:new Date().toISOString(),environment:'local Cloudflare D1 preview',results},null,2));
+await writeFile(new URL(process.env.UNO_TEST_RUNTIME==='node'?'../qa-network-node.json':'../qa-network.json',import.meta.url),JSON.stringify({testedAt:new Date().toISOString(),environment:process.env.UNO_TEST_RUNTIME==='node'?'Node.js + SQLite':'local Cloudflare D1 preview',results},null,2));

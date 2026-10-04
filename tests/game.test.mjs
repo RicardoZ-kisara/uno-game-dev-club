@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {newGame,makeDeck,face,canPlay,applyAction,viewGame,colors,scoreFace,nextRound} from '../lib/game.ts';
+import {handCardInfo} from '../lib/card-effects.ts';
 const names=['A','B','C','D'].map((name,avatar)=>({name,avatar}));
 const c=(id,color,kind='number',n=3,extra={})=>({id,a:{color,kind,n,...extra}});
 function state(mode='classic',stacking=false){const g=newGame(mode,names,{dealer:3,stacking});g.turn=0;g.phase='playing';g.dir=1;g.side=0;g.color='red';g.pending=null;g.discard=[c('top','red','number',5)];g.players.forEach(p=>{p.hand=[c('s'+p.name,'blue','number',7),c('t'+p.name,'yellow','number',2)];p.power=true});return g}
@@ -23,4 +24,26 @@ test('UNO can be predeclared and saves penalty',()=>{let g=state();g.players[0].
 test('final draw card settles before scoring; no stack after going out',()=>{let g=state('classic',true);g.players[0].hand=[c('last','red','draw2')];g.players[1].hand.push(c('stack','red','draw2'));g=applyAction(g,0,{type:'play',id:'last'});assert.equal(g.phase,'playing');assert.equal(canPlay(g,1,g.players[1].hand.at(-1)),false);g=applyAction(g,1,{type:'accept'});assert.equal(g.phase,'over');assert.equal(g.winner,0);assert.ok(g.players[0].score>0);assert.equal(nextRound(g).players[0].score,0)});
 test('private projection hides other hands, deck and challenge truth',()=>{let g=state();g.players[0].hand.push(c('wd','wild','wild4'));g=applyAction(g,0,{type:'play',id:'wd',color:'red'});const v=viewGame(g,1);assert.equal(v.players[0].hand.length,0);assert.equal(v.players[1].hand.length,2);assert.equal(v.pending.illegal,undefined);assert.equal(v.pending.proof,undefined);assert.equal(v.deck,undefined)});
 test('scores are based on the active face',()=>{assert.equal(scoreFace({color:'wild',kind:'wildColor'},'flip'),60);assert.equal(scoreFace({color:'red',kind:'draw1'},'flip'),10);assert.equal(scoreFace({color:'purple',kind:'skipAll'},'flip'),30)});
+test('selected FLEX description follows normal, boosted and exhausted states',()=>{
+ const g=state('flex'),card=c('preview','red','draw2',0,{flex:'draw2'});g.players[0].hand.push(card);
+ const normal=handCardInfo(card,viewGame(g,0),0,false);assert.match(normal.detail,/下一位摸 2 张并跳过/);assert.equal(normal.boosted,false);
+ const boosted=handCardInfo(card,viewGame(g,0),0,true);assert.match(boosted.detail,/其余三人各摸 1 张，下一位照常/);assert.equal(boosted.boosted,true);
+ const result=applyAction(g,0,{type:'play',id:card.id,flex:true});assert.equal(result.turn,1);assert.equal(result.pending,null);assert.ok(result.players.slice(1).every(p=>p.hand.length===3));
+ g.players[0].power=false;const exhausted=handCardInfo(card,viewGame(g,0),0,true);assert.equal(exhausted.boosted,false);assert.match(exhausted.detail,/能量已耗尽，当前仅普通/);assert.match(exhausted.detail,/下一位摸 2 张并跳过/);
+});
+test('preview matches actual secondary-color legality, plain cards and energy reset',()=>{
+ const g=state('flex'),alt=c('alt','yellow','number',8,{alt:'red',flex:'color'}),plain=c('plain','red','number',4,{power:true});g.players[0].hand.push(alt,plain);
+ assert.equal(handCardInfo(alt,viewGame(g,0),0,false).playable,false);assert.equal(handCardInfo(alt,viewGame(g,0),0,true).playable,true);
+ assert.match(handCardInfo(alt,viewGame(g,0),0,true).detail,/出牌后跟黄色/);
+ assert.equal(handCardInfo(plain,viewGame(g,0),0,true).boosted,false);assert.equal(handCardInfo(plain,viewGame(g,0),0,true).playable,true);
+ g.players.slice(1).forEach(p=>p.power=false);assert.match(handCardInfo(alt,viewGame(g,0),0,true).detail,/全员耗尽将自动恢复/);
+ assert.match(handCardInfo(plain,viewGame(g,0),0,true).detail,/将全员恢复/);
+});
+test('FLIP outward faces update after flip and draw without exposing active hands',()=>{
+ let g=newGame('flip',names,{dealer:3},()=>0.42);g.phase='playing';g.side=0;g.color='red';g.turn=0;g.pending=null;
+ const flipCard=g.players[0].hand.find(c=>c.a.kind==='flip')??g.deck.find(c=>c.a.kind==='flip');
+ if(!g.players[0].hand.includes(flipCard)){g.deck=g.deck.filter(c=>c.id!==flipCard.id);g.players[0].hand.push(flipCard)}g.color=flipCard.a.color;
+ function verify(){for(let viewer=0;viewer<4;viewer++){const v=viewGame(g,viewer);for(let i=0;i<4;i++){assert.deepEqual(v.players[i].backs,i===viewer?[]:g.players[i].hand.map(c=>face(c,1-g.side)));assert.equal(v.players[i].hand.length,i===viewer?g.players[i].hand.length:0);}}}
+ verify();g=applyAction(g,0,{type:'play',id:flipCard.id});assert.equal(g.side,1);verify();if(g.phase==='color')g=applyAction(g,g.turn,{type:'color',color:'teal'});g=applyAction(g,g.turn,{type:'draw'});verify();
+});
 test('300 simulated four-player games preserve cards and finish',()=>{for(const mode of ['classic','flip','flex'])for(let round=0;round<100;round++){let g=newGame(mode,names,{stacking:round%2===0});const total=makeDeck(mode).length;let turns=0;while(g.phase!=='over'&&turns++<2500){const who=g.turn;let action;if(g.phase==='color')action={type:'color',color:colors(g)[0]};else{let plays=g.players[who].hand.flatMap(c=>[false,true].filter(f=>canPlay(g,who,c,f)).map(f=>({c,f})));if(g.pending&&!plays.length)action={type:g.pending.challenge&&Math.random()<.5?'challenge':'accept'};else if(plays.length){const choice=plays[Math.floor(Math.random()*plays.length)];action={type:'play',id:choice.c.id,flex:choice.f,color:colors(g)[Math.floor(Math.random()*4)],target:(who+1)%4,uno:true}}else action={type:g.drawn?'pass':'draw'}}g=applyAction(g,who,action);const all=[...g.deck,...g.discard,...g.players.flatMap(p=>p.hand)];assert.equal(all.length,total);assert.equal(new Set(all.map(c=>c.id)).size,total);assert.ok(g.turn>=0&&g.turn<4)}assert.equal(g.phase,'over',`${mode} did not end`);assert.equal(g.players[g.winner].hand.length,0)}});

@@ -1,6 +1,6 @@
 {
-  "testedAt": "2026-10-04T16:01:45.911Z",
-  "environment": "local Cloudflare D1 preview",
+  "testedAt": "2026-10-04T16:01:47.530Z",
+  "environment": "Node.js + SQLite",
   "results": [
     {
       "mode": "classic",

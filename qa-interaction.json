@@ -1,0 +1,55 @@
+{
+  "testedAt": "2026-10-04T16:04:44.284Z",
+  "browser": "Chrome through CUA; desktop and emulated touch, not physical phones",
+  "viewports": [
+    [
+      1897,
+      998
+    ],
+    [
+      390,
+      844
+    ],
+    [
+      320,
+      640
+    ],
+    [
+      844,
+      390
+    ]
+  ],
+  "checks": {
+    "mouseFirstClickSelectsWithoutPlaying": "passed",
+    "mouseSecondClickPlays": "passed",
+    "touchHorizontalBrowseKeepsHandCount": "passed",
+    "touchSwipeAfterSelectionPlaysOnRelease": "passed",
+    "unplayableCardsInspectable": "passed",
+    "touchLiftPixels": 155,
+    "mouseHoverLiftPixels": 60,
+    "phoneCardSize": [
+      112,
+      160
+    ],
+    "desktopCardSize": [
+      138,
+      197
+    ],
+    "pageScrollLocked": "passed",
+    "flexNormalAndBoostedDescription": "passed",
+    "flipThreeSides": "passed",
+    "flipTapDetail": "passed",
+    "smallPhonePilesNotOccluded": "passed",
+    "navbarHideAndRestorePreference": "passed",
+    "noVisibleCharacterNamesOrColorInitials": "passed",
+    "nodeRestartPreservesRoom": "passed"
+  },
+  "networkReports": [
+    "qa-network.json",
+    "qa-network-node.json"
+  ],
+  "screenshots": [
+    "docs/previews/flip-mobile.png",
+    "docs/previews/flex-interaction.png"
+  ]
+}

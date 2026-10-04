@@ -25,12 +25,16 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@uno/runtime": [
+        "./db/runtime.cloudflare.ts"
       ]
     },
     "types": [
       "node",
       "@cloudflare/workers-types"
-    ]
+    ],
+    "allowImportingTsExtensions": true
   },
   "include": [
     "next-env.d.ts",
@@ -38,10 +42,13 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    ".next-node/types/**/*.ts",
+    ".next-node/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "examples"
+    "examples",
+    ".next-node"
   ]
 }
