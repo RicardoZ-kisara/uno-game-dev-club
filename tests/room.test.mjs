@@ -26,6 +26,34 @@ for(const mode of ['classic','flip','flex']){
   const observers=await Promise.all(tokens.map(t=>get(code,t)));assert.ok(observers.every(o=>o.status===200&&o.data.revision===updated.data.revision));assert.equal(new Set(observers.map(o=>o.data.game.top.id)).size,1);
  }
  const reconnect=await get(code,tokens[2]);assert.equal(reconnect.data.viewer,2);assert.equal(reconnect.data.game.players[2].hand.length,reconnect.data.game.players[2].count);
- results.push({mode,clients:4,actions,privacy:'passed',turnAuthorization:'passed',optimisticConcurrency:'passed',idempotency:'passed',reconnect:'passed'});console.log(mode+': four-client integration passed');
+ // Switching devices preserves the game and hands, but changes who may operate it.
+ const before=(await get(code,tokens[0])).data;
+ const denied=await call({op:'mode',code,playMode:'shared',revision:before.revision,requestId:crypto.randomUUID()},tokens[1]);assert.equal(denied.status,400);
+ const switched=await call({op:'mode',code,playMode:'shared',revision:before.revision,requestId:crypto.randomUUID()},tokens[0]);assert.equal(switched.status,200);assert.equal(switched.data.playMode,'shared');
+ assert.equal(switched.data.game.revision,before.game.revision);assert.equal(switched.data.game.top.id,before.game.top.id);
+ const g=switched.data.game;
+ for(let i=0;i<4;i++)assert.equal(g.players[i].hand.length,i===g.turn?g.players[i].count:0);
+ for(const t of tokens.slice(1)){const observer=(await get(code,t)).data;assert.ok(observer.game.players.every(p=>p.hand.length===0&&p.backs.length===0));assert.equal(observer.game.legal.length,0);assert.equal(observer.game.reveal,null)}
+ const blocked=await call({op:'action',code,revision:switched.data.revision,requestId:crypto.randomUUID(),action:{type:'draw'}},tokens[1]);assert.equal(blocked.status,400);
+ if(g.phase!=='over'){
+  const action=g.phase==='color'?{type:'color',color:mode==='flip'&&g.side===1?'pink':'red'}:{type:g.pending?'accept':g.drawn?'pass':'draw'};
+  const operated=await call({op:'action',code,revision:switched.data.revision,requestId:crypto.randomUUID(),action},tokens[0]);assert.equal(operated.status,200,JSON.stringify(operated.data));assert.equal(operated.data.game.revision,g.revision+1);
+ }
+ const current=(await get(code,tokens[0])).data;
+ const restored=await call({op:'mode',code,playMode:'online',revision:current.revision,requestId:crypto.randomUUID()},tokens[0]);assert.equal(restored.status,200);assert.equal(restored.data.game.revision,current.game.revision);
+ for(let i=0;i<4;i++){const own=(await get(code,tokens[i])).data;assert.equal(own.playMode,'online');own.game.players.forEach((p,j)=>assert.equal(p.hand.length,i===j?p.count:0))}
+ // Starting on one device also supports joining three new devices mid-round.
+ const solo=await call({op:'create',mode,name:'房主',playMode:'shared',names:['房主','玩家 2','玩家 3','玩家 4']});assert.equal(solo.status,200);assert.ok(solo.data.game);assert.equal(solo.data.seats.filter(s=>s.virtual).length,3);
+ assert.equal((await call({op:'join',code:solo.data.code,mode,name:'访客'})).status,409);
+ const online=await call({op:'mode',code:solo.data.code,playMode:'online',revision:solo.data.revision,requestId:crypto.randomUUID()},solo.data.token);assert.equal(online.status,200);
+ for(let i=1;i<4;i++){const joined=await call({op:'join',code:solo.data.code,mode,name:'手机'+i});assert.equal(joined.status,200,JSON.stringify(joined.data));assert.equal(joined.data.viewer,i);assert.equal(joined.data.game.players[i].hand.length,7);assert.equal(joined.data.game.top.id,solo.data.game.top.id);assert.equal(joined.data.game.players[i].name,'手机'+i)}
+ results.push({mode,clients:4,actions,privacy:'passed',turnAuthorization:'passed',optimisticConcurrency:'passed',idempotency:'passed',reconnect:'passed',hostModeSwitch:'passed',sharedSpectatorPrivacy:'passed',sharedToFourDevices:'passed'});console.log(mode+': four-client integration and device switching passed');
 }
+const lobby=await call({op:'create',mode:'classic',name:'旧房主'});
+const guest=await call({op:'join',code:lobby.data.code,mode:'classic',name:'新房主'});
+const sharedLobby=await call({op:'mode',code:lobby.data.code,revision:guest.data.revision,requestId:crypto.randomUUID(),playMode:'shared'},lobby.data.token);
+const left=await call({op:'leave',code:lobby.data.code,revision:sharedLobby.data.revision,requestId:crypto.randomUUID()},lobby.data.token);assert.equal(left.status,200);
+const promoted=(await get(lobby.data.code,guest.data.token)).data;assert.equal(promoted.host,1);
+const newStart=await call({op:'start',code:lobby.data.code,revision:promoted.revision,requestId:crypto.randomUUID()},guest.data.token);assert.equal(newStart.status,200,JSON.stringify(newStart.data));assert.ok(newStart.data.game);
+console.log('shared lobby host handoff passed');
 await writeFile(new URL('../qa-network.json',import.meta.url),JSON.stringify({testedAt:new Date().toISOString(),environment:'local Cloudflare D1 preview',results},null,2));

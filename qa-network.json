@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-10-04T12:29:28.501Z",
+  "testedAt": "2026-10-04T13:52:00.544Z",
   "environment": "local Cloudflare D1 preview",
   "results": [
     {
@@ -10,7 +10,10 @@
       "turnAuthorization": "passed",
       "optimisticConcurrency": "passed",
       "idempotency": "passed",
-      "reconnect": "passed"
+      "reconnect": "passed",
+      "hostModeSwitch": "passed",
+      "sharedSpectatorPrivacy": "passed",
+      "sharedToFourDevices": "passed"
     },
     {
       "mode": "flip",
@@ -20,7 +23,10 @@
       "turnAuthorization": "passed",
       "optimisticConcurrency": "passed",
       "idempotency": "passed",
-      "reconnect": "passed"
+      "reconnect": "passed",
+      "hostModeSwitch": "passed",
+      "sharedSpectatorPrivacy": "passed",
+      "sharedToFourDevices": "passed"
     },
     {
       "mode": "flex",
@@ -30,7 +36,10 @@
       "turnAuthorization": "passed",
       "optimisticConcurrency": "passed",
       "idempotency": "passed",
-      "reconnect": "passed"
+      "reconnect": "passed",
+      "hostModeSwitch": "passed",
+      "sharedSpectatorPrivacy": "passed",
+      "sharedToFourDevices": "passed"
     }
   ]
 }
