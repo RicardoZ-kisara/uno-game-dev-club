@@ -27,6 +27,10 @@
 .cameo-2{--cameo-glow:#8bdfff;--cameo-image:url("/portraits/aris.png");--cameo-size:509.0000% auto;--cameo-position:50.1222% 10.5008%}
 .cameo-3{--cameo-glow:#ffd387;--cameo-image:url("/portraits/yuzu.jpg");--cameo-size:512.0000% auto;--cameo-position:72.3301% 6.3830%}
 .cameo-4{--cameo-glow:#efa9ff;--cameo-image:url("/portraits/kei.jpg");--cameo-size:382.9787% auto;--cameo-position:49.6241% 20.7254%}
+.cameo-5{--cameo-glow:#bba6ff;--cameo-image:url("/portraits/yuuka.png");--cameo-size:656.7742% auto;--cameo-position:50.1159% 14.6837%}
+.cameo-6{--cameo-glow:#9becf0;--cameo-image:url("/portraits/noa.jpg");--cameo-size:428.4810% auto;--cameo-position:58.3815% 21.1132%}
+.cameo-7{--cameo-glow:#ffaddd;--cameo-image:url("/portraits/koyuki.jpg");--cameo-size:492.3077% auto;--cameo-position:33.3333% 0.0000%}
+.cameo-8{--cameo-glow:#ffb68a;--cameo-image:url("/portraits/rio.jpg");--cameo-size:547.8571% auto;--cameo-position:66.1882% 6.1856%}
 .cameo-art{display:block;background-image:var(--cameo-image);background-size:var(--cameo-size);background-position:var(--cameo-position);background-repeat:no-repeat}
 .egg-card{overflow:hidden}
 .egg-card .card-portrait{position:absolute;left:0;right:0;top:13%;aspect-ratio:1;mask-image:linear-gradient(transparent,#000 9%,#000 83%,transparent)}
@@ -56,3 +60,5 @@
 .device-mode{display:flex;gap:2px;background:#0c1625;border:1px solid #34465b;border-radius:8px;padding:3px}.device-mode button{font-size:12px;gap:5px;padding:6px 8px;border-radius:5px;color:#91a6bc}.device-mode button[aria-pressed=true]{background:#294246;color:var(--accent)}.device-mode button:disabled{opacity:.65}.invite-note{color:#a3b7c8;font-size:13px}.invite-note b{color:var(--accent);font-family:Consolas,monospace;letter-spacing:2px}
 .seat-info .waiting-device{display:inline!important;color:#ffd58e;font-size:10px}.waiting-device+em{display:none!important}
 @media(max-width:720px){.device-mode button{font-size:10px;padding:5px;gap:3px}.device-mode svg{width:12px}.room-info .tag,.room-info .rule-chip{display:none}.room-info h1{font-size:12px}.room-controls{gap:2px}.room-controls .icon-button{width:27px}.egg-gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 11px;padding:15px 6px}.egg-gallery .playing-card{max-width:106px;justify-self:center}.egg-card .card-oval svg{width:22px!important;height:22px!important}.egg-card.color-wild .card-oval{font-size:23px!important}}
+
+.portrait-tabs{display:flex;gap:4px;padding:4px;background:#0b1523;border:1px solid #33465c;border-radius:9px;margin-top:14px}.portrait-tabs button{flex:1;padding:7px 12px;border-radius:6px;font-size:13px;color:#8da5bc}.portrait-tabs button[aria-pressed=true]{background:#294246;color:var(--accent)}

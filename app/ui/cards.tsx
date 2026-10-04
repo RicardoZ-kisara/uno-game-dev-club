@@ -1,7 +1,7 @@
 import {Ban,Repeat2,Rotate3d,FastForward,Zap,RefreshCw,Crosshair,Users} from 'lucide-react';
-import {type Card,type Face,type EasterEgg,type Mode,face,label,cardEasterEgg,LIGHT} from '@/lib/game';
-import type {CSSProperties} from 'react';
-export const CAMEOS=['桃井','小绿','爱丽丝','柚子','Kei'] as const;
+import {type Card,type Face,type EasterEgg,type Mode,face,label,cardEasterEgg,LIGHT,DARK,COLOR_NAMES} from '@/lib/game';
+import {useState,type CSSProperties} from 'react';
+export const CAMEOS=['桃井','小绿','爱丽丝','柚子','Kei','优香','诺亚','小雪','莉音'] as const;
 export function CameoArt({cameo,className=''}:{cameo:EasterEgg;className?:string}){
  return <span className={`cameo-art cameo-${cameo} ${className}`} aria-hidden="true"/>;
 }
@@ -9,15 +9,17 @@ export function SeatBadge({seat}:{seat:number}){
  return <div className={`avatar seat-badge seat-tone-${seat%4}`} aria-hidden="true">{String(seat+1).padStart(2,'0')}</div>;
 }
 export function EggGallery({mode,onPreview}:{mode:Mode;onPreview:(cameo:EasterEgg)=>void}){
- return <div className="egg-gallery">{(['red','green','blue','yellow'] as const).map((color,i)=>{
-  const f:Face={color,kind:'number',n:7,...(mode==='flex'?{flex:'color',alt:LIGHT[(LIGHT.indexOf(color)+2)%4]}:{})};
-  return <PlayingCard key={color} card={{id:`preview-${color}`,a:f}} onClick={()=>onPreview(i as EasterEgg)}/>;
- })}<PlayingCard card={{id:'preview-kei',a:{color:'wild',kind:'wild4'}}} onClick={()=>onPreview(4)}/></div>;
+ const [variant,setVariant]=useState(0);
+ const palette=mode==='flip'&&variant===1?DARK:['red','green','blue','yellow'] as const;
+ let samples:Face[]=palette.map(color=>({color,kind:'number',n:7,...(mode==='flex'?{flex:'color',alt:LIGHT[(LIGHT.indexOf(color)+2)%4]}:{})}));
+ samples.push({color:'wild',kind:mode==='flip'?(variant===1?'wildColor':'wild2'):'wild4',...(mode==='flex'?{flex:'wild4'}:{})});
+ if(mode==='flex'&&variant===1)samples=[{color:'red',kind:'draw2',flex:'draw2'},{color:'green',kind:'reverse',flex:'reverse'},{color:'blue',kind:'skip',flex:'skip'},{color:'yellow',kind:'number',n:1,power:true},...(['target2','all2','wild4','allFlip'] as const).map(kind=>({color:'wild' as const,kind,...(kind==='allFlip'?{}:{flex:kind})}))];
+ return <>{mode!=='classic'&&<div className="portrait-tabs" role="group" aria-label="卡面类型">{(mode==='flip'?['明面','暗面']:['数字与副色','强化功能牌']).map((title,i)=><button key={title} aria-pressed={variant===i} onClick={()=>setVariant(i)}>{title}</button>)}</div>}<div className="egg-gallery">{samples.map((f,i)=><PlayingCard key={`${mode}-${variant}-${i}`} card={{id:`preview-${i}`,a:f}} onClick={()=>onPreview(cardEasterEgg(f)!)}/>)}</div></>;
 }
 export function Symbol({f}:{f:Face}){if(f.kind==='number')return <>{f.n}</>;if(f.kind==='skip')return <Ban/>;if(f.kind==='reverse')return <Repeat2/>;if(f.kind==='flip')return <Rotate3d/>;if(f.kind==='skipAll')return <FastForward/>;if(f.kind==='allFlip')return <RefreshCw/>;if(f.kind==='target2')return <><Crosshair/><small>+2</small></>;if(f.kind==='all2')return <><Users/><small>+2</small></>;if(f.kind==='wild')return <span className="wild-diamond"/>;return <>{({draw1:'+1',draw2:'+2',draw5:'+5',wild2:'+2',wild4:'+4',wildColor:'+色'} as Record<string,string>)[f.kind]}</>}
 export function PlayingCard({card,side=0,disabled=false,playable=false,selected=false,onClick,style,small=false}:{card:Card;side?:number;disabled?:boolean;playable?:boolean;selected?:boolean;onClick?:()=>void;style?:CSSProperties;small?:boolean}){
  const f=face(card,side),cameo=cardEasterEgg(f);
- const description=`${label(f)}${f.flex?' 可强化':''}${f.power?' 翻转自身能量':''}${cameo!==undefined?` · ${CAMEOS[cameo]}`:''}`;
+ const description=`${label(f)}${f.flex?' 可强化':''}${f.alt?` 副色${COLOR_NAMES[f.alt]}`:''}${f.power?' 翻转自身能量':''}${cameo!==undefined?` · ${CAMEOS[cameo]}`:''}`;
  const content=<>
   {cameo!==undefined&&<><CameoArt cameo={cameo} className="card-portrait"/><span className="card-foil"/><span className="cameo-signature">✦ {CAMEOS[cameo]}</span></>}
   <span className="card-corner"><Symbol f={f}/></span><span className="card-oval"><Symbol f={f}/></span><span className="card-corner bottom"><Symbol f={f}/></span>

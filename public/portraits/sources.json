@@ -91,6 +91,86 @@
       ],
       "sha256": "508058d4f86fa01a0633bacb88621c8d9387bc5608aa1ac0161e352cc1a30349",
       "bytes": 196641
+    },
+    {
+      "character": "优香 / Yuuka",
+      "file": "yuuka.png",
+      "source": "https://webcnstatic.yostar.net/ba_cn_web/prod/web/assets/Yuuka.a5c0cd40.png",
+      "publication": "https://bluearchive-cn.com/",
+      "publisher": "Yostar 国服官网",
+      "dimensions": [
+        2036,
+        1638
+      ],
+      "crop": [
+        865,
+        195,
+        310
+      ],
+      "cameo": 5,
+      "color": "purple",
+      "sha256": "a5c0cd404510a38b46e1e130b0114154b4f6f2d90c3c22640110c87d306b9b6a",
+      "bytes": 714869
+    },
+    {
+      "character": "诺亚 / Noa",
+      "file": "noa.jpg",
+      "source": "https://pbs.twimg.com/media/Fr9ajYoaIAA6rED.jpg",
+      "publication": "https://x.com/KR_BlueArchive/status/1639132432686522368",
+      "publisher": "KR_BlueArchive 韩服官方角色介绍",
+      "dimensions": [
+        677,
+        1200
+      ],
+      "crop": [
+        303,
+        220,
+        158
+      ],
+      "cameo": 6,
+      "color": "teal",
+      "sha256": "102b987bf7674d05ccd1b47fc41f2c993667bb6ee46811386bb0bae914c36366",
+      "bytes": 161157
+    },
+    {
+      "character": "小雪 / Koyuki",
+      "file": "koyuki.jpg",
+      "source": "https://www.4gamer.net/games/519/G051983/20240417034/SS/003.jpg",
+      "publication": "https://www.4gamer.net/games/519/G051983/20240417034/",
+      "publisher": "Yostar 官方新闻稿，由 4Gamer 转载（2024-04-17）",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "crop": [
+        340,
+        0,
+        260
+      ],
+      "cameo": 7,
+      "color": "pink",
+      "sha256": "0821ad44e0799153d7af75898c708d1cd9b7364033c2b993e71bd5cf298e58e1",
+      "bytes": 285311
+    },
+    {
+      "character": "莉音 / Rio",
+      "file": "rio.jpg",
+      "source": "https://cimg.kgl-systems.io/camion/files/famitsu/31729/af3ccdd27d2000e3f9255a7e3e2c48800.jpg?x=767",
+      "publication": "https://www.famitsu.com/article/202501/31729",
+      "publisher": "Yostar 官方新闻稿，由 Fami通转载（2025-01-27）",
+      "dimensions": [
+        767,
+        431
+      ],
+      "crop": [
+        415,
+        18,
+        140
+      ],
+      "cameo": 8,
+      "color": "orange",
+      "sha256": "f7d53493ce9b83a1976ffbf07387a5a8858d43252870bb0fd8be9d542db5e9eb",
+      "bytes": 59138
     }
   ]
 }

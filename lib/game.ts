@@ -3,7 +3,7 @@ export type Color='red'|'yellow'|'green'|'blue'|'pink'|'teal'|'orange'|'purple'|
 export type Face={color:Color;kind:string;n?:number;alt?:Color;flex?:string;power?:boolean};
 export type Card={id:string;a:Face;b?:Face};
 export type Player={name:string;avatar:number;hand:Card[];power:boolean;score:number;called:boolean};
-export type EasterEgg=0|1|2|3|4;
+export type EasterEgg=0|1|2|3|4|5|6|7|8;
 export type Event={id:number;type:string;text:string;actor?:number;amount?:number;cameo?:EasterEgg};
 export type Pending={amount:number;kind:string;source:number;target:number;color?:Color;illegal?:boolean;proof?:Face[];challenge:boolean};
 export type Game={mode:Mode;players:Player[];deck:Card[];discard:Card[];side:0|1;color:Color;dir:1|-1;turn:number;dealer:number;round:number;phase:'playing'|'color'|'over';stacking:boolean;match500:boolean;pending:Pending|null;drawn:string|null;unoVulnerable:number|null;out:number|null;winner:number|null;matchWinner:number|null;events:Event[];eventId:number;revision:number;reveal:{viewer:number;faces:Face[]}|null};
@@ -15,7 +15,7 @@ export const KINDS:Record<string,string>={number:'数字',skip:'跳过',reverse:
 export function face(card:Card,side=0):Face{return side===1&&card.b?card.b:card.a}
 // Presentation only: every color has a portrait; wild cards feature Kei.
 export function cardEasterEgg(f:Face):EasterEgg|undefined{
- return ({red:0,green:1,blue:2,yellow:3,pink:0,orange:1,purple:2,teal:3,wild:4} as Partial<Record<Color,EasterEgg>>)[f.color];
+ return ({red:0,green:1,blue:2,yellow:3,pink:7,orange:8,purple:5,teal:6,wild:4} as Partial<Record<Color,EasterEgg>>)[f.color];
 }
 export function label(f:Face){return `${COLOR_NAMES[f.color]}色 ${f.kind==='number'?f.n:KINDS[f.kind]??f.kind}`}
 export function colors(g:Pick<Game,'mode'|'side'>){return g.mode==='flip'&&g.side===1?DARK:LIGHT}
