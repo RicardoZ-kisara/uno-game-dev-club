@@ -1,55 +1,75 @@
 {
-  "testedAt": "2026-10-04T16:04:44.284Z",
-  "browser": "Chrome through CUA; desktop and emulated touch, not physical phones",
+  "testedAt": "2026-10-04T18:30:36.194Z",
+  "browser": "Chromium with CDP touch input; physical phones not tested",
   "viewports": [
     [
-      1897,
-      998
+      320,
+      640
     ],
     [
       390,
       844
     ],
     [
-      320,
-      640
-    ],
-    [
       844,
       390
+    ],
+    [
+      1440,
+      900
     ]
   ],
+  "touchLiftPixels": 30,
+  "mouseHoverLiftPixels": 30,
+  "phoneCardWidthPixels": 100.8,
+  "shortPhoneCardWidthPixels": 86.4,
+  "landscapeCardWidthPixels": 77.4,
+  "desktopMaxCardWidthPixels": 124.2,
+  "minimumExposedPixels": {
+    "phone": 32,
+    "desktop": 48
+  },
   "checks": {
-    "mouseFirstClickSelectsWithoutPlaying": "passed",
-    "mouseSecondClickPlays": "passed",
-    "touchHorizontalBrowseKeepsHandCount": "passed",
-    "touchSwipeAfterSelectionPlaysOnRelease": "passed",
-    "unplayableCardsInspectable": "passed",
-    "touchLiftPixels": 155,
-    "mouseHoverLiftPixels": 60,
-    "phoneCardSize": [
-      112,
-      160
-    ],
-    "desktopCardSize": [
-      138,
-      197
-    ],
-    "pageScrollLocked": "passed",
-    "flexNormalAndBoostedDescription": "passed",
-    "flipThreeSides": "passed",
-    "flipTapDetail": "passed",
-    "smallPhonePilesNotOccluded": "passed",
-    "navbarHideAndRestorePreference": "passed",
-    "noVisibleCharacterNamesOrColorInitials": "passed",
-    "nodeRestartPreservesRoom": "passed"
+    "directSwipe": "passed",
+    "tapThenSwipe": "passed",
+    "doubleTapDisabled": "passed",
+    "doubleTapEnabled": "passed",
+    "horizontalBrowse": "passed",
+    "cancelledSwipe": "passed",
+    "mouseSecondClick": "passed",
+    "keyboardAfterTouch": "passed",
+    "preferencePersistenceAndSwitchContrast": "passed",
+    "leaveReloadAndResume": "passed",
+    "classic-320x640": "passed",
+    "classic-390x844": "passed",
+    "classic-844x390": "passed",
+    "classic-1440x900": "passed",
+    "flip-320x640": "passed",
+    "flip-390x844": "passed",
+    "flip-844x390": "passed",
+    "flip-1440x900": "passed",
+    "flex-320x640": "passed",
+    "flex-390x844": "passed",
+    "flex-844x390": "passed",
+    "flex-1440x900": "passed",
+    "websocketIdleWithoutPolling": "passed",
+    "websocketPushAcrossClients": "passed",
+    "backgroundPauseAndForegroundReconnect": "passed",
+    "websocketUnavailableFallsBackToOwnHandHttpSync": "passed",
+    "ownFlipOtherSide": "passed",
+    "touchLiftEqualsSelectedHeight": "passed",
+    "targetedDamageViewer0": "passed",
+    "targetedDamageViewer1": "passed",
+    "individualResultViewer0": "passed",
+    "individualResultViewer1": "passed",
+    "rankingOrder": "passed",
+    "finishedPlayerExcludedFromTargetPicker": "passed",
+    "longHandPaginationPreservesSpacing": "passed",
+    "targetedSkipAndWildColor": "passed",
+    "equalRevisionPresenceAndHostSkip": "passed"
   },
   "networkReports": [
     "qa-network.json",
     "qa-network-node.json"
-  ],
-  "screenshots": [
-    "docs/previews/flip-mobile.png",
-    "docs/previews/flex-interaction.png"
   ]
 }

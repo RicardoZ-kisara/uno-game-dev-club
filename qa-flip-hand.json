@@ -1,0 +1,11 @@
+{
+  "testedAt": "2026-10-04T18:28:34.333Z",
+  "browser": "Chromium CDP touch simulation; physical phones not tested",
+  "checks": {
+    "inPlaceInspectionSide0": "passed",
+    "inPlaceInspectionSide1": "passed",
+    "landscape844x390": "passed",
+    "landscape667x320": "passed",
+    "landscape1024x600": "passed"
+  }
+}

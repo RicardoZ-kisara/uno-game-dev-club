@@ -16,8 +16,9 @@
     "test": "node --experimental-strip-types tests/game.test.mjs",
     "test:rooms": "node tests/room.test.mjs",
     "build:node": "next build --webpack",
-    "start:node": "node scripts/node-server.mjs",
-    "deploy": "node scripts/node-server.mjs --build"
+    "start:node": "node --experimental-strip-types scripts/node-server.mjs",
+    "deploy": "node --experimental-strip-types scripts/node-server.mjs --build",
+    "test:websocket": "node --experimental-strip-types tests/websocket-origin.test.mjs && node tests/websocket.test.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
@@ -43,6 +44,7 @@
     "sonner": "^2.0.8",
     "tailwind-merge": "3.6.0",
     "vaul": "^1.1.2",
+    "ws": "^8.22.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {

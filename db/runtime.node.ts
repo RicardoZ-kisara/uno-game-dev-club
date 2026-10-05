@@ -21,3 +21,12 @@ export function getRoomDatabase():RoomDatabase{
  }}}}};
 }
 export function getLanOrigin(){return process.env.UNO_LAN_ORIGIN??null}
+const busKey=Symbol.for('uno.room.events');
+const presenceKey=Symbol.for('uno.room.presence');
+type Presence={seen:number;sockets:number};
+const globals=globalThis as typeof globalThis&{[busKey]?:EventTarget;[presenceKey]?:Map<string,Map<string,Presence>>};
+export function roomEvents(){return globals[busKey]??=new EventTarget()}
+function presence(code:string){const rooms=globals[presenceKey]??=new Map();if(!rooms.has(code))rooms.set(code,new Map());return rooms.get(code)!}
+export async function notifyRoomChanged(code:string){roomEvents().dispatchEvent(new CustomEvent('room',{detail:code}))}
+export async function getRoomPresence(code:string){return [...presence(code)].filter(([,p])=>Date.now()-p.seen<35000).map(([hash])=>hash)}
+export async function markRoomPresence(code:string,hash:string,socketDelta=0){const map=presence(code),old=map.get(hash),was=!!old&&Date.now()-old.seen<35000;const p={seen:Date.now(),sockets:Math.max(0,(old?.sockets??0)+socketDelta)};if(socketDelta<0&&p.sockets===0)p.seen=0;map.set(hash,p);const now=Date.now()-p.seen<35000;if(now!==was)await notifyRoomChanged(code)}

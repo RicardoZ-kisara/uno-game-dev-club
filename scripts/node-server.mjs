@@ -4,6 +4,9 @@ import {isIP} from 'node:net';
 import {existsSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {createServer} from 'node:http';
+import next from 'next';
+import {attachRoomSockets} from './websocket-server.mjs';
 
 process.chdir(fileURLToPath(new URL('..',import.meta.url)));
 const port=Number(process.env.UNO_PORT||process.env.PORT||3000);
@@ -24,4 +27,10 @@ function run(args){const result=spawnSync(process.execPath,['node_modules/next/d
 if(process.argv.includes('--build'))run(['build','--webpack']);
 if(!existsSync('.next-node/BUILD_ID'))throw Error('Run npm run build:node first, or use npm run deploy.');
 console.log(`\nUNO CLUB · Node.js + SQLite\n四台设备打开 / Open on all devices: ${url.origin}\nClassic: ${url.origin}/\nFLIP: ${url.origin}/flip\nFLEX: ${url.origin}/flex\nDatabase: ${process.env.UNO_DATA_DIR}\nPress Ctrl+C to stop.\n`);
-run(['start','--hostname',host,'--port',String(port)]);
+const app=next({dev:false,hostname:host,port});
+await app.prepare();
+const server=createServer(app.getRequestHandler());
+attachRoomSockets(server);
+server.on('upgrade',(req,socket,head)=>{if(new URL(req.url??'/',url.origin).pathname!=='/api/room/socket')app.getUpgradeHandler()(req,socket,head)});
+server.listen(port,host);
+for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>{server.close(()=>process.exit(0));setTimeout(()=>process.exit(0),2000).unref()});

@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-10-04T16:01:47.530Z",
+  "testedAt": "2026-10-04T17:50:37.440Z",
   "environment": "Node.js + SQLite",
   "results": [
     {
@@ -11,6 +11,8 @@
       "optimisticConcurrency": "passed",
       "idempotency": "passed",
       "reconnect": "passed",
+      "concurrentReady": "passed",
+      "conditionalPolling": "passed",
       "hostModeSwitch": "passed",
       "sharedSpectatorPrivacy": "passed",
       "sharedToFourDevices": "passed"
@@ -24,6 +26,8 @@
       "optimisticConcurrency": "passed",
       "idempotency": "passed",
       "reconnect": "passed",
+      "concurrentReady": "passed",
+      "conditionalPolling": "passed",
       "hostModeSwitch": "passed",
       "sharedSpectatorPrivacy": "passed",
       "sharedToFourDevices": "passed"
@@ -37,6 +41,8 @@
       "optimisticConcurrency": "passed",
       "idempotency": "passed",
       "reconnect": "passed",
+      "concurrentReady": "passed",
+      "conditionalPolling": "passed",
       "hostModeSwitch": "passed",
       "sharedSpectatorPrivacy": "passed",
       "sharedToFourDevices": "passed"

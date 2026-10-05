@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./fonts.css";
 import "./play-layout.css";
+import "./table-effects.css";
 
 export const metadata: Metadata = {
   title: "UNO CLUB · 四人牌桌",

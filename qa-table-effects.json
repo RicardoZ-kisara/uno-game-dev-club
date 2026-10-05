@@ -1,0 +1,26 @@
+{
+  "testedAt": "2026-10-05T01:46:40.034Z",
+  "browser": "Chromium; controlled authenticated stream projections for effect ordering",
+  "checks": {
+    "defaultCameoDisabled": "passed",
+    "explicitCameoPreferencePreserved": "passed",
+    "stackHasTargetedGraphicImpact": "passed",
+    "skipHasTargetedGraphicImpact": "passed",
+    "colorUsesVisualWithoutCaption": "passed",
+    "turnBrightnessAndNextActivePlayer": "passed",
+    "rankingFinishForViewer0": "passed",
+    "rankingFinishForViewer1": "passed",
+    "persistentVictoryRanksWithEffectsDisabled": "passed",
+    "seatGraphicsAligned320x640": "passed",
+    "finishedBottomSeatGraphicsAligned320x640": "passed",
+    "seatGraphicsAligned390x844": "passed",
+    "finishedBottomSeatGraphicsAligned390x844": "passed",
+    "seatGraphicsAligned844x390": "passed",
+    "finishedBottomSeatGraphicsAligned844x390": "passed",
+    "seatGraphicsAligned1440x900": "passed",
+    "finishedBottomSeatGraphicsAligned1440x900": "passed",
+    "twoPlayerReverseActsAndAnimatesAsSkipViewer0": "passed",
+    "twoPlayerReverseActsAndAnimatesAsSkipViewer2": "passed",
+    "unoDisplaysBeforeCardEffect": "passed"
+  }
+}

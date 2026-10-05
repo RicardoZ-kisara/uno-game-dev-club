@@ -33,20 +33,20 @@ body{touch-action:manipulation}
 .opponent-detail-cards .playing-card{width:100%;height:auto;aspect-ratio:100/143;max-width:126px;justify-self:center}
 .opponent-detail-cards .playing-card.selected{outline:3px solid #bfaaff;outline-offset:3px;transform:translateY(-3px)}
 .back-effect{font-size:13px;line-height:1.7;color:#c5d4e3;margin:0}
-.hand-dock{height:auto;flex:none;display:flex;flex-direction:column;padding:5px 4px 7px;--hand-width:clamp(118px,10vw,138px);--hand-height:calc(var(--hand-width) * 1.43)}
+.hand-dock{height:auto;flex:none;display:flex;flex-direction:column;padding:5px 4px 7px;--hand-width:clamp(106.2px,9vw,124.2px);--hand-height:calc(var(--hand-width) * 1.43)}
 .hand-toolbar{order:3;z-index:7;flex:none;min-height:36px;margin-top:4px;background:#0a101b}
 .hand-fan{order:1;position:relative;height:var(--hand-height);flex:none;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;z-index:6;overflow:visible}
 .hand-spread{position:relative;height:100%;width:min(100%,calc(var(--hand-width) + (var(--count) - 1) * 78px));margin:auto}
 .hand-slot{position:absolute;top:0;left:calc(var(--i) * ((100% - var(--hand-width)) / max(1,var(--count) - 1)));width:var(--hand-width);height:var(--hand-height);z-index:calc(10 + var(--i))}
 .hand-slot .playing-card{width:100%;height:100%;border:4px solid #bdcbd8;border-radius:12px;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease;transform:translateY(0);box-shadow:-4px 2px 11px #0007}
-.hand-slot .playing-card:not(.playable){filter:saturate(.78) brightness(.82)}
-.hand-slot .playing-card.playable{border-color:#d7fff0;box-shadow:0 0 0 1px #97f5dd,0 0 14px #73f0be25}
+.hand-slot .playing-card:not(.playable){filter:saturate(.25) brightness(.55)}
+.hand-slot .playing-card.playable{border-color:#effff5;box-shadow:0 0 0 2px #70f4b4,0 0 20px #73f0be55}
 .hand-slot.is-selected{z-index:90}
 .hand-slot.is-selected .playing-card{transform:translateY(-30px);outline:2px solid var(--accent);outline-offset:3px}
 .hand-slot.is-peeked{z-index:100}
-.hand-slot.is-peeked .playing-card{transform:translateY(-60px);filter:none;box-shadow:0 12px 28px #000b,0 0 0 2px #eaf7ff}
-.touch-browsing .hand-slot.is-peeked .playing-card{transform:translateY(-155px);transition:transform .12s ease}
-.swipe-ready .hand-slot.is-peeked .playing-card.playable{box-shadow:0 0 0 3px #c6f87b,0 0 35px #c6f87b88;transform:translateY(-172px)}
+.hand-slot.is-peeked .playing-card{transform:translateY(-30px);filter:none;box-shadow:0 12px 28px #000b,0 0 0 2px #eaf7ff}
+.touch-browsing .hand-slot.is-peeked .playing-card{transform:translateY(-30px);transition:transform .12s ease}
+.swipe-ready .hand-slot.is-peeked .playing-card.playable{box-shadow:0 0 0 3px #c6f87b,0 0 35px #c6f87b88;transform:translateY(-30px)}
 .hand-slot.is-selected .playing-card{filter:none}
 .hand-slot .card-corner{font-size:25px;top:5px;left:7px}
 .hand-slot .card-corner.bottom{right:7px;bottom:5px;top:auto;left:auto}
@@ -74,7 +74,7 @@ body{touch-action:manipulation}
 @media(max-width:720px){
  .topbar{height:49px;padding:5px 0}.topbar nav a{padding:6px;font-size:12px}.header-tools button{width:25px}
  .room-strip{height:43px}.room-info h1{font-size:11px}.device-mode button{padding:4px;font-size:10px}
- .hand-dock{--hand-width:112px;padding:3px 0 5px}
+ .hand-dock{--hand-width:100.8px;padding:3px 0 5px}
  .hand-card-effect{min-height:79px;padding:6px 8px 4px}.hand-card-effect p{font-size:11px;line-height:1.5}.effect-title{font-size:12px;gap:5px}.effect-badge,.effect-title em{font-size:10px}
  .hand-toolbar{min-height:32px;margin-top:3px}.hand-controls button{min-height:31px}.hand-owner{gap:3px}
  .hand-slot .card-corner{font-size:22px}.hand-slot .egg-card .card-oval,.hand-slot .egg-card.color-wild .card-oval{font-size:34px!important}
@@ -87,7 +87,7 @@ body{touch-action:manipulation}
  .turn-message{margin-top:27px;font-size:11px}.last-action{max-width:94%}.game-dialog{max-height:90dvh}
 }
 @media(max-height:660px){
- .hand-dock{--hand-width:96px}.hand-card-effect{min-height:62px}.hand-card-effect p{font-size:10px}.hand-card-effect .selection-help{margin:9px 0}
+ .hand-dock{--hand-width:86.4px}.hand-card-effect{min-height:62px}.hand-card-effect p{font-size:10px}.hand-card-effect .selection-help{margin:9px 0}
  .in-game .seat .avatar{width:24px;height:26px}.in-game .seat{padding:4px;min-width:0}.in-game .seat-score{display:none}
  .in-game .game-center{top:59%}.table-state{margin-bottom:7px}.turn-message{margin-top:24px;font-size:11px}
  .game-center .playing-card,.game-center .draw-pile{width:62px;height:89px;border-width:3px}.piles{gap:17px!important}.back-fan,.back-fan .playing-card{height:55px}.back-fan{--mini-width:38px}
@@ -95,7 +95,7 @@ body{touch-action:manipulation}
  .hand-slot .egg-card .flex-mark{padding:3px;min-height:23px;font-size:10px}.hand-slot .egg-card .card-oval svg{width:26px!important;height:26px!important}
 }
 @media(max-height:460px) and (min-width:600px){
- .topbar{height:42px}.room-strip{height:35px}.hand-dock{--hand-width:86px;display:grid;grid-template-columns:1fr 220px;gap:5px 12px;padding-top:3px}
+ .topbar{height:42px}.room-strip{height:35px}.hand-dock{--hand-width:77.4px;display:grid;grid-template-columns:1fr 220px;gap:5px 12px;padding-top:3px}
  .hand-fan{grid-row:1/3;grid-column:1}.hand-card-effect{grid-row:1;grid-column:2;min-height:65px;margin-top:0}.hand-toolbar{grid-row:2;grid-column:2;flex-wrap:wrap;justify-content:center;margin:0}.hand-owner{display:flex}.hand-owner b,.hand-owner>span{display:none}.hand-controls{max-width:100%}
  .in-game .seat.relative-2{top:5px}.backs-2{top:5px}.game-center .piles .playing-card,.game-center .draw-pile{width:47px;height:67px}.in-game .game-center{top:56%}.table-state{margin-bottom:5px;font-size:9px}.turn-message{margin-top:19px}.last-action{display:none}
  .backs-2 .back-fan{--mini-width:29px;height:41px}.backs-2 .playing-card{height:41px}.backs-2>span{display:none}
@@ -109,4 +109,121 @@ body{touch-action:manipulation}
  .backs-1 .card-corner,.backs-3 .card-corner{font-size:10px}
  .backs-1 .egg-card .card-oval,.backs-3 .egg-card .card-oval{font-size:15px!important}
  .device-mode button{white-space:nowrap}
+}
+
+/* Keep the center clear on both portrait and short landscape screens. */
+.in-game .seat.relative-seat{display:flex;transform:none;min-width:0;max-width:30%}
+.in-game .seat.relative-0{left:10px;right:auto;top:auto;bottom:25px}
+.in-game .seat.relative-1{left:10px;right:auto;top:10px;bottom:auto}
+.in-game .seat.relative-2{left:auto;right:10px;top:10px;bottom:auto}
+.in-game .seat.relative-3{left:auto;right:10px;top:auto;bottom:25px}
+.in-game:not(.mode-flip) .seat.relative-2{left:auto}
+.in-game .game-center{top:50%}
+.backs-1{left:14px;right:auto;top:83px;bottom:auto}
+.backs-2{left:auto;right:14px;top:83px;bottom:auto}
+.backs-3{left:auto;right:14px;top:auto;bottom:105px}
+.resume-table{margin:14px auto 0;font-size:14px;min-width:0}
+.mouse-help{display:block;font-size:10px;margin-top:3px}
+
+/* Deliberate local styling: the global light-theme tokens made these invisible. */
+.game-dialog [data-slot=switch]{width:46px;height:28px;padding:3px;min-height:28px;justify-content:flex-start;gap:0;border:1px solid #7b91aa;background:#324258;box-shadow:inset 0 1px 4px #0006;cursor:pointer}
+.game-dialog [data-slot=switch][data-state=checked]{background:#97f5de;border-color:#c9fff3}
+.game-dialog [data-slot=switch-thumb]{width:20px;height:20px;background:#f4f8fc;box-shadow:0 1px 4px #0007;transform:translateX(0)}
+.game-dialog [data-slot=switch-thumb][data-state]{translate:0}
+.game-dialog [data-slot=switch-thumb][data-state=checked]{transform:translateX(18px);background:#163b38}
+.game-dialog [data-slot=switch]:focus-visible{outline:3px solid #b9caff;outline-offset:3px}
+.game-dialog [data-slot=switch]:disabled{opacity:.5;cursor:not-allowed}
+.no-card-shine .card-foil{display:none}
+.no-card-shine .cameo-burst:after{display:none}
+
+@media(max-width:720px){
+ .in-game .seat.relative-seat{width:102px;max-width:32%;padding:5px;max-height:64px}
+ .in-game .seat.relative-0,.in-game .seat.relative-1{left:5px}
+ .in-game .seat.relative-2,.in-game .seat.relative-3{right:5px}
+ .in-game .seat.relative-1,.in-game .seat.relative-2{top:7px}
+ .in-game .seat.relative-0,.in-game .seat.relative-3{bottom:23px}
+ .backs-1,.backs-2{top:66px;width:93px}
+ .backs-1{left:6px}.backs-2{right:6px}.backs-3{right:6px;bottom:88px;width:93px}
+ .mouse-help{display:none}
+}
+@media(max-height:660px){
+ .opponent-backs .back-fan{display:none}
+ .opponent-backs{width:auto!important;border:1px solid #53647c;background:#152336;padding:3px 5px}
+ .backs-1,.backs-2{top:65px}
+ .backs-3{bottom:83px}
+ .in-game .seat-info em{display:none}
+ .in-game .game-center{top:50%}
+}
+@media(max-height:460px) and (min-width:600px){
+ .hand-dock{grid-template-columns:1fr 250px}
+ .hand-toolbar .hand-owner{display:none}
+ .hand-toolbar{margin:0;min-height:32px;align-self:start}
+ .hand-controls{width:100%;max-width:100%;gap:5px;justify-content:center}
+ .hand-controls button{font-size:11px;padding:5px 7px;min-height:30px;gap:3px}
+ .hand-controls button svg{width:13px;height:13px}
+ .hand-controls .uno-button{font-size:15px!important}
+ .hand-controls .flex-toggle{font-size:11px!important}
+}
+
+/* Required color is visible across the table, on either FLIP side. */
+.table-stage.table-color-red{--table-tint:#b72e3c}.table-stage.table-color-yellow{--table-tint:#b59027}.table-stage.table-color-green{--table-tint:#237d53}.table-stage.table-color-blue{--table-tint:#285ca6}.table-stage.table-color-pink{--table-tint:#b42a7d}.table-stage.table-color-teal{--table-tint:#147c7d}.table-stage.table-color-orange{--table-tint:#b96525}.table-stage.table-color-purple{--table-tint:#713eaf}
+.in-game .table-stage[class*=table-color-]{background:radial-gradient(ellipse at 50% 48%,color-mix(in srgb,var(--table-tint) 58%,#101b2a),#101b2a 90%);border-color:color-mix(in srgb,var(--table-tint) 70%,#5b6f86);transition:background .35s,border-color .35s}
+.in-game .seat.current{border:2px solid #dcfff0;background:#244a40;box-shadow:0 0 0 3px #82f6c544,0 0 25px #9af5df48;z-index:5}
+.in-game .seat.current .seat-info b,.in-game .seat.current .seat-info span{color:#f0fff8}
+.turn-seat-label{position:absolute;top:-11px;right:8px!important;font-size:10px!important;font-weight:800;line-height:16px;background:#c9ffe2;color:#16472e!important;padding:0 5px;border-radius:4px;margin:0!important}
+.seat-rank{position:absolute;top:-11px;right:7px;background:#cfcbff;color:#242147!important;padding:2px 5px;border-radius:4px;font-size:10px!important;white-space:nowrap}
+.finished-seat{opacity:.7}.seat-impacted{animation:seat-impact .5s ease 3;border-color:#ff9ac0!important;box-shadow:0 0 20px #ef427766!important}
+.seat .seat-effect{position:absolute;left:50%;top:calc(100% + 4px);transform:translateX(-50%);background:#892f51;border:1px solid #ff9bbd;color:#fff;font-size:12px;font-weight:800;white-space:nowrap;padding:4px 7px;border-radius:6px;box-shadow:0 4px 12px #0007;z-index:8;animation:seat-effect-pop .3s ease both;margin:0}
+.seat.relative-0 .seat-effect,.seat.relative-3 .seat-effect{top:auto;bottom:calc(100% + 4px)}
+.seat-effect-skip{background:#654098!important}.fx-skip{background:radial-gradient(ellipse,transparent 25%,#9c62e95c)}.fx-skip .fx-caption{color:#dfbbff}
+.fx-color{background:radial-gradient(ellipse,transparent 15%,var(--fx-tint,#fff8));animation:red-flash .95s both}.fx-color-red{--fx-tint:#e240577a}.fx-color-yellow{--fx-tint:#ebbf477a}.fx-color-green{--fx-tint:#41d68a7a}.fx-color-blue{--fx-tint:#4589e67a}.fx-color-pink{--fx-tint:#e647af7a}.fx-color-teal{--fx-tint:#35cfcb7a}.fx-color-orange{--fx-tint:#ed8d367a}.fx-color-purple{--fx-tint:#a471e47a}
+.lose-panel>span{color:#ff9ac0}.round-result{margin:0!important}.victory-panel{overflow-y:auto;padding:12px}.victory-panel .scoreboard{max-width:100%;flex-wrap:wrap;justify-content:center}.rank-number{font-size:12px;color:#d9ccff}.ranking-board strong{font-size:14px}.own-backs{white-space:nowrap}
+@keyframes seat-impact{0%,100%{translate:0}30%{translate:-3px 0}60%{translate:3px 0}}@keyframes seat-effect-pop{from{opacity:0;scale:.65}to{opacity:1;scale:1}}
+@media(prefers-reduced-motion:reduce){.seat-impacted{animation:none}.seat-effect{animation:none!important}.in-game .table-stage[class*=table-color-]{transition:none}}
+
+.connection-status{color:#aceccc;font-size:10px;white-space:nowrap}.seat .seat-presence{position:absolute;right:6px;bottom:3px;font-size:9px;line-height:12px;pointer-events:none;margin:0;background:#152d2b;border-radius:3px;padding:0 3px}.seat .seat-presence.online{color:#a4f4c4}.seat .seat-presence.offline{color:#e5b0bb;background:#432938}.skip-offline{font-size:11px;padding:5px 8px;white-space:nowrap}
+@media(max-width:720px){.room-info .connection-status{font-size:8px}.seat .seat-presence{font-size:8px;bottom:1px;right:3px}.room-strip:has(.skip-offline){height:auto;min-height:43px;flex-wrap:wrap;gap:3px}.skip-offline{font-size:10px;padding:4px}.hand-controls .own-backs{font-size:10px;padding:5px}}
+
+.hand-slot.is-selected .playing-card:not(.playable),.hand-slot.is-peeked .playing-card:not(.playable){filter:saturate(.4) brightness(.74);border-color:#718093}.hand-slot.is-selected .playing-card:not(.playable){outline-color:#718093}
+
+.fx-recipient{position:absolute;left:12px;right:12px;top:calc(50% + 75px);text-align:center;color:#fff;font-size:clamp(14px,3vw,24px);text-shadow:0 2px 6px #000;font-weight:700}
+
+/* FLIP inspection keeps every physical card in its existing hand slot. */
+.hand-slot{perspective:700px}
+.hand-slot .playing-card.flip-pair-card{background:transparent;isolation:auto;overflow:visible}
+.hand-flip-turn{display:block;position:absolute;inset:0;transform-style:preserve-3d;transition:transform .42s ease;transform:rotateY(0)}
+.hand-flip-turn.shows-dark{transform:rotateY(180deg)}
+.hand-flip-face{display:block;position:absolute;inset:0;border-radius:7px;background:var(--card-color);overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;isolation:isolate}
+.hand-flip-face.flip-dark-face{transform:rotateY(180deg)}
+.inspecting-other .hand-slot .playing-card{filter:none!important;border-color:#c4b9ef;box-shadow:-4px 2px 11px #0007}
+.inspecting-other .hand-slot.is-selected .playing-card{outline-color:#c4b9ef}
+.inspecting-other+.hand-card-effect{border-color:#8974ba;background:#221e36}
+@media(prefers-reduced-motion:reduce){.hand-flip-turn{transition:none}}
+
+/* In landscape the exposed opposite faces sit beside each player's panel. */
+@media(orientation:landscape) and (max-height:700px){
+ .in-game.mode-flip .seat.relative-seat{width:124px;max-width:20%;height:49px;max-height:49px;min-width:0;padding:4px;gap:5px}
+ .in-game.mode-flip .seat .avatar{width:25px;height:29px}
+ .in-game.mode-flip .seat.relative-1,.in-game.mode-flip .seat.relative-2{top:7px}
+ .in-game.mode-flip .seat.relative-0,.in-game.mode-flip .seat.relative-3{bottom:7px}
+ .in-game.mode-flip .opponent-backs{width:96px!important;min-height:49px;height:49px;gap:0;padding:2px 4px;border:1px solid #768496;background:#172537}
+ .in-game.mode-flip .backs-1{left:140px;right:auto;top:7px;bottom:auto}
+ .in-game.mode-flip .backs-2{left:auto;right:140px;top:7px;bottom:auto}
+ .in-game.mode-flip .backs-3{left:auto;right:140px;top:auto;bottom:7px}
+ .in-game.mode-flip .opponent-backs .back-fan{display:block;height:32px;--mini-width:23px}
+ .in-game.mode-flip .back-fan .playing-card{height:32px;border-width:1px;border-radius:3px}
+ .in-game.mode-flip .back-fan .playing-card:nth-child(n+4){display:none}
+ .in-game.mode-flip .back-fan .playing-card{left:calc(var(--i) * 27px)}
+ .in-game.mode-flip .back-fan .card-corner{font-size:8px;left:1px;top:1px}
+ .in-game.mode-flip .back-fan .card-corner.bottom{right:1px;bottom:1px}
+ .in-game.mode-flip .back-fan .card-corner svg{width:7px;height:7px}
+ .in-game.mode-flip .back-fan .egg-card .card-oval,.in-game.mode-flip .back-fan .egg-card.color-wild .card-oval{font-size:11px!important}
+ .in-game.mode-flip .back-fan .egg-card .card-oval svg{width:10px!important;height:10px!important}
+ .in-game.mode-flip .opponent-backs>span{display:flex;font-size:8px;line-height:10px;white-space:nowrap}
+}
+@media(orientation:landscape) and (max-height:700px) and (max-width:720px){
+ .in-game.mode-flip .seat.relative-seat{width:90px;max-width:18%}
+ .in-game.mode-flip .opponent-backs{width:71px!important;padding:2px}
+ .in-game.mode-flip .backs-1{left:101px}.in-game.mode-flip .backs-2,.in-game.mode-flip .backs-3{right:101px}
+ .in-game.mode-flip .back-fan .playing-card{left:calc(var(--i) * 21px)}
 }

@@ -10,7 +10,19 @@ for(const mode of ['classic','flip','flex']){
  assert.equal((await call({op:'join',code,mode,name:'第五人'})).status,409);
  assert.equal((await get(code)).status,401);
  const stale=await call({op:'ready',code,revision:1,requestId:crypto.randomUUID()},tokens[0]);assert.equal(stale.status,409);
- for(let i=0;i<4;i++){const r=await get(code,tokens[i]);assert.equal(r.data.viewer,i);const ready=await call({op:'ready',code,revision:r.data.revision,requestId:crypto.randomUUID()},tokens[i]);assert.equal(ready.status,200)}
+ // All devices intentionally submit the same stale room revision at once.
+ const readyPayloads=tokens.map(()=>({op:'ready',code,revision:1,ready:true,requestId:crypto.randomUUID()}));
+ const readyResults=await Promise.all(tokens.map((t,i)=>call(readyPayloads[i],t)));
+ readyResults.forEach(r=>assert.equal(r.status,200,JSON.stringify(r.data)));
+ const prepared=(await get(code,tokens[0])).data;assert.ok(prepared.seats.every(s=>s.ready));
+ const duplicateReady=await call(readyPayloads[0],tokens[0]);assert.equal(duplicateReady.status,200);assert.equal(duplicateReady.data.revision,prepared.revision);
+ const cancelReady=await call({op:'ready',code,revision:1,ready:false,requestId:crypto.randomUUID()},tokens[0]);assert.equal(cancelReady.status,200);assert.equal(cancelReady.data.seats[0].ready,false);assert.ok(cancelReady.data.seats.slice(1).every(s=>s.ready));
+ const lateDuplicate=await call(readyPayloads[0],tokens[0]);assert.equal(lateDuplicate.data.seats[0].ready,false);
+ assert.equal((await call({op:'ready',code,revision:1,ready:true,requestId:crypto.randomUUID()},tokens[0])).status,200);
+ const initial=await fetch(base+'/api/room?code='+code,{headers:{Authorization:'Bearer '+tokens[0]}});const etag=initial.headers.get('etag');assert.ok(etag);
+ const unchanged=await fetch(base+'/api/room?code='+code,{headers:{Authorization:'Bearer '+tokens[0],'If-None-Match':etag}});assert.equal(unchanged.status,304);assert.equal(await unchanged.text(),'');
+ assert.equal((await fetch(base+'/api/room?code='+code,{headers:{'If-None-Match':etag}})).status,401);
+ assert.equal((await fetch(base+'/api/room?code='+code,{headers:{Authorization:'Bearer '+tokens[1],'If-None-Match':etag}})).status,200);
  let r=await get(code,tokens[1]);assert.equal((await call({op:'start',code,revision:r.data.revision,requestId:crypto.randomUUID()},tokens[1])).status,400);
  r=await get(code,tokens[0]);const requestId=crypto.randomUUID(),payload={op:'start',code,revision:r.data.revision,requestId};let started=await call(payload,tokens[0]);assert.equal(started.status,200,JSON.stringify(started.data));assert.ok(started.data.game);const duplicate=await call(payload,tokens[0]);assert.equal(duplicate.status,200);assert.equal(duplicate.data.revision,started.data.revision);
  let actions=0;
@@ -50,9 +62,13 @@ for(const mode of ['classic','flip','flex']){
  const solo=await call({op:'create',mode,name:'房主',playMode:'shared',names:['房主','玩家 2','玩家 3','玩家 4']});assert.equal(solo.status,200);assert.ok(solo.data.game);assert.equal(solo.data.seats.filter(s=>s.virtual).length,3);
  assert.equal((await call({op:'join',code:solo.data.code,mode,name:'访客'})).status,409);
  const online=await call({op:'mode',code:solo.data.code,playMode:'online',revision:solo.data.revision,requestId:crypto.randomUUID()},solo.data.token);assert.equal(online.status,200);
- for(let i=1;i<4;i++){const joined=await call({op:'join',code:solo.data.code,mode,name:'手机'+i});assert.equal(joined.status,200,JSON.stringify(joined.data));assert.equal(joined.data.viewer,i);assert.equal(joined.data.game.players[i].hand.length,7);assert.equal(joined.data.game.top.id,solo.data.game.top.id);assert.equal(joined.data.game.players[i].name,'手机'+i)}
- results.push({mode,clients:4,actions,privacy:'passed',turnAuthorization:'passed',optimisticConcurrency:'passed',idempotency:'passed',reconnect:'passed',hostModeSwitch:'passed',sharedSpectatorPrivacy:'passed',sharedToFourDevices:'passed'});console.log(mode+': four-client integration and device switching passed');
+ for(let i=1;i<4;i++){const joined=await call({op:'join',code:solo.data.code,mode,name:'手机'+i});assert.equal(joined.status,200,JSON.stringify(joined.data));assert.equal(joined.data.viewer,i);assert.equal(joined.data.game.players[i].hand.length,solo.data.game.players[i].count);assert.equal(joined.data.game.top.id,solo.data.game.top.id);assert.equal(joined.data.game.players[i].name,'手机'+i)}
+ results.push({mode,clients:4,actions,privacy:'passed',turnAuthorization:'passed',optimisticConcurrency:'passed',idempotency:'passed',reconnect:'passed',concurrentReady:'passed',conditionalPolling:'passed',hostModeSwitch:'passed',sharedSpectatorPrivacy:'passed',sharedToFourDevices:'passed'});console.log(mode+': four-client integration and device switching passed');
 }
+const simultaneous=await call({op:'create',mode:'classic',name:'并发房主'});
+const simultaneousJoins=await Promise.all([1,2,3].map(i=>call({op:'join',code:simultaneous.data.code,mode:'classic',name:'同时入座'+i})));
+simultaneousJoins.forEach(r=>assert.equal(r.status,200,JSON.stringify(r.data)));assert.equal(new Set(simultaneousJoins.map(r=>r.data.viewer)).size,3);
+console.log('concurrent joins and ready flags passed');
 const lobby=await call({op:'create',mode:'classic',name:'旧房主'});
 const guest=await call({op:'join',code:lobby.data.code,mode:'classic',name:'新房主'});
 const sharedLobby=await call({op:'mode',code:lobby.data.code,revision:guest.data.revision,requestId:crypto.randomUUID(),playMode:'shared'},lobby.data.token);

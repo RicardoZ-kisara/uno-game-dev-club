@@ -17,6 +17,8 @@ const managedLinux = readExecutionProfile() === "managed-linux";
 
 const localBindingConfig = {
   main: "./build/sites-worker.ts",
+  durable_objects: {bindings: [{name:'ROOM_STREAM',class_name:'RoomStream'}]},
+  migrations: [{tag:'room-stream-v1',new_sqlite_classes:['RoomStream']}],
   compatibility_flags: ["nodejs_compat"],
   d1_databases: d1
     ? [

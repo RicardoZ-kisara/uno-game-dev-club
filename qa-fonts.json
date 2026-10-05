@@ -1,0 +1,20 @@
+{
+  "assetsVerified": 109,
+  "families": [
+    {
+      "family": "UNO Sans",
+      "loaded": true
+    },
+    {
+      "family": "UNO CJK",
+      "loaded": true
+    },
+    {
+      "family": "UNO Mono",
+      "loaded": true
+    }
+  ],
+  "body": "\"UNO Sans\", \"UNO CJK\", sans-serif",
+  "fontRequests": 10,
+  "allFontsSameOrigin": true
+}
