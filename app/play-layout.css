@@ -63,6 +63,8 @@ body{touch-action:manipulation}
 .effect-title em{margin-left:auto;color:#93a4b7;font-size:11px;font-style:normal;white-space:nowrap}
 .effect-title em.can-play{color:#a8f3ce}
 .hand-card-effect p{font-size:12px;line-height:1.55;color:#c0cfdf;margin:3px 0 0}
+.hand-card-effect p.play-rejection{color:#ffd1a3}
+.flex-toggle[aria-disabled=true]{opacity:.55}
 .hand-card-effect.boosted{border-color:#a5cb5a;background:linear-gradient(100deg,#243320,#132022)}
 .boosted .effect-badge{color:#c6f87b;font-weight:750}
 .hand-card-effect .selection-help{color:#849cb4;text-align:center;margin:13px 0}

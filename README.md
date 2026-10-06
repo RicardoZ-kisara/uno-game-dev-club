@@ -80,10 +80,14 @@ npm run dev -- --port 5173
 数据库迁移只在新的本地数据库执行一次。不要在已存在的表上重复执行。开发服务默认为本机访问。手机预览用 `npm run dev -- --hostname 0.0.0.0`，然后在同一 Wi-Fi 中打开电脑的局域网地址（5173 端口）。
 
 ```powershell
-node --experimental-strip-types tests/game.test.mjs
+npm test
 node tests/room.test.mjs
 node tests/websocket.test.mjs
 ```
+
+`npm test` 包含 FLEX 强化状态、普通跨色 +2 叠加、印刷加牌值、最后一张结算和真实 FLEX 牌组抢出回归。非法出牌原因由服务端生成；点选手牌后显示具体原因，手机触摸也可查看。罚牌期间强化开关只显示说明，普通加牌仍可按房规叠加。
+
+`tests/flex-online.test.mjs` 针对本地 Node 服务验证 WebSocket / HTTP 回退、触屏拒绝提示、重连、并发版本冲突及手牌隐私。先在独立测试数据库启动服务，再把其 `rooms.sqlite` 路径设为 `UNO_TEST_DB`；可复用下面的 `UNO_PLAYWRIGHT_MODULE` / `UNO_CHROME_PATH` 配置。测试只重写它自己刚创建的测试房间，结果和截图保存到 `outputs/flex-qa/`，不要指向正在使用的牌局数据库。
 
 触屏与布局回归测试在 `tests/interaction.test.mjs`，需要 Playwright 和运行中的服务；可用 `UNO_PLAYWRIGHT_MODULE` 指定 Playwright 模块，用 `UNO_CHROME_PATH` 指定 Chromium 可执行文件。浏览器模拟触屏不能替代实机检查。
 

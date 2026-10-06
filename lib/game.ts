@@ -87,15 +87,40 @@ export function canJump(g:Game,actor:number,card:Card){
  if(g.pending){const incoming=DRAW_AMOUNTS[a.kind],previous=DRAW_AMOUNTS[g.pending.kind];if(!g.stacking||g.pending.source!==actor||!incoming||!previous||incoming<previous)return false}
  return (['kind','color','n','alt','flex','power'] as const).every(key=>a[key]===b[key]);
 }
-export function canPlay(g:Game,actor:number,card:Card,useFlex=false){
- if(g.phase!=='playing'||finished(g,actor)||g.out!==null)return false;
- if(g.turn!==actor)return !useFlex&&canJump(g,actor,card);
- if(g.drawn&&g.drawn!==card.id)return false;
- const f=face(card,g.side);if(useFlex&&(!g.players[actor].power||!f.flex))return false;
- if(g.pending){const incoming=DRAW_AMOUNTS[f.kind],previous=DRAW_AMOUNTS[g.pending.kind];return g.stacking&&!useFlex&&!!incoming&&!!previous&&incoming>=previous}
+/** Public reasons use only this player's card and public game state. */
+export function playRejectionReason(g:Game,actor:number,card:Card,useFlex=false):string|null{
+ if(g.phase==='over')return '本局已结束';
+ if(g.phase!=='playing')return '请先选择颜色';
+ if(finished(g,actor))return '你已出完手牌';
+ if(g.out!==null)return '已有玩家打出最后一张，须先结算罚牌，不能继续叠加或抢出';
+ const f=face(card,g.side);
+ if(g.turn!==actor){
+  if(useFlex)return g.pending?'强化效果不允许叠加；抢出只能使用普通效果':'非本人回合不能强化；抢出只能使用普通效果';
+  if(canJump(g,actor,card))return null;
+  if(!g.jumpIn)return '还没轮到你；房间未开启相同牌抢出';
+  if(g.drawn)return '有人正在处理刚摸到的牌，暂时不能抢出';
+  if(g.pending){
+   if(!g.stacking)return '房间未开启加牌叠加，罚牌期间不能抢出';
+   if(g.pending.source!==actor)return '罚牌期间只有上一张加牌的出牌者可连出相同牌；还没轮到你';
+   if(!DRAW_AMOUNTS[f.kind]||!DRAW_AMOUNTS[g.pending.kind])return '只有数值加牌能叠加；指定加二、全体加二和抽色不能接罚牌';
+  }
+  return '抢出须与顶牌的颜色、数字、功能、副色、强化和能量标记全部一致';
+ }
+ if(g.drawn&&g.drawn!==card.id)return '只能出刚摸到的牌';
+ if(g.pending){
+  if(useFlex)return '强化效果不允许叠加，请使用普通效果';
+  if(!g.stacking)return '房间未开启加牌叠加，请接受罚牌';
+  const incoming=DRAW_AMOUNTS[f.kind],previous=DRAW_AMOUNTS[g.pending.kind];
+  if(!incoming||!previous)return '只有数值加牌能叠加；指定加二、全体加二和抽色不能接罚牌';
+  if(incoming<previous)return `上一张印刷加牌值为 +${previous}，不能接 +${incoming}；须接不小于 +${previous} 的数值加牌`;
+  return null;
+ }
+ if(useFlex&&!g.players[actor].power)return '强化能量已耗尽';
+ if(useFlex&&!f.flex)return '这张牌没有强化效果';
  const top=face(g.discard.at(-1)!,g.side);
- return f.color==='wild'||f.color===g.color||(useFlex&&f.alt===g.color)||(f.kind==='number'&&top.kind==='number'&&f.n===top.n)||(f.kind!=='number'&&f.kind===top.kind);
+ return f.color==='wild'||f.color===g.color||(useFlex&&f.alt===g.color)||(f.kind==='number'&&top.kind==='number'&&f.n===top.n)||(f.kind!=='number'&&f.kind===top.kind)?null:'颜色、数字或功能与当前顶牌不匹配';
 }
+export function canPlay(g:Game,actor:number,card:Card,useFlex=false){return playRejectionReason(g,actor,card,useFlex)===null}
 export function applyAction(original:Game,actor:number,a:Action):Game{
  const g:Game=normalize(structuredClone(original));if(!g.players[actor])throw Error('无效座位');const p=g.players[actor];
  if(a.type==='uno'){
@@ -107,7 +132,7 @@ export function applyAction(original:Game,actor:number,a:Action):Game{
   const target=g.unoVulnerable;if(target===null||target===actor||g.players[target].called||g.players[target].hand.length!==1)throw Error('现在没有可举报的漏喊');
   draw(g,target,2);g.unoVulnerable=null;event(g,'catch',`${p.name} 抓到了漏喊 UNO`,actor);g.revision++;return g;
  }
- if(g.phase==='over')throw Error('本局已结束');if(finished(g,actor))throw Error('你已出完手牌');if(g.turn!==actor&&!(a.type==='play'&&!a.flex&&p.hand.some(c=>c.id===a.id&&canJump(g,actor,c))))throw Error('还没轮到你');
+ if(g.phase==='over')throw Error('本局已结束');if(finished(g,actor))throw Error('你已出完手牌');if(g.turn!==actor&&a.type!=='play')throw Error('还没轮到你');
  if(a.type==='skip'){
   if(g.pending){const result=applyAction(g,actor,{type:'accept'});const affected=result.events.findLast(e=>e.type==='skip'&&e.target===actor);if(affected)affected.text=`${p.name} 离线，房主跳过本回合`;return result}
   if(g.phase==='color'){g.color=a.color&&colors(g).includes(a.color)?a.color:colors(g)[0];g.phase='playing';event(g,'color',`${p.name} 离线，选择${COLOR_NAMES[g.color]}色`,actor,undefined,{color:g.color})}
@@ -138,7 +163,7 @@ export function applyAction(original:Game,actor:number,a:Action):Game{
  }
  if(a.type!=='play')throw Error('无效操作');
  const idx=p.hand.findIndex(c=>c.id===a.id);if(idx<0)throw Error('这张牌不在你的手牌中');const card=p.hand[idx];const f=face(card,g.side);const flex=!!a.flex;
- if(!canPlay(g,actor,card,flex))throw Error('这张牌当前无法出牌');
+ const rejection=playRejectionReason(g,actor,card,flex);if(rejection)throw Error(`这张牌当前无法出牌：${rejection}`);
  if(f.color==='wild'&&(!a.color||!colors(g).includes(a.color)))throw Error('请指定有效颜色');
  if(flex&&['target2','wild4'].includes(f.kind)&&(!Number.isInteger(a.target)||a.target===actor||!g.players[a.target!]||finished(g,a.target!)))throw Error('请选择另一位玩家');
  const illegal=restricted(f)&&!flex&&hasMatchingColor(g,actor,card);const proof=p.hand.filter(c=>c.id!==card.id).map(c=>face(c,g.side));
@@ -169,6 +194,6 @@ export function applyAction(original:Game,actor:number,a:Action):Game{
 }
 export function nextRound(original:Game){const g=normalize({...original});if(g.phase!=='over')throw Error('当前对局尚未结束');return newGame(g.mode,g.players.map(p=>({name:p.name,avatar:p.avatar,score:g.matchWinner===null?p.score:0})),{stacking:g.stacking,match500:g.match500,jumpIn:g.jumpIn,finishMode:g.finishMode,round:g.matchWinner===null?g.round+1:1,dealer:(g.dealer+1)%4})}
 export function viewGame(original:Game,viewer:number){
- const g=normalize({...original});return {mode:g.mode,players:g.players.map((p,i)=>({name:p.name,avatar:p.avatar,power:p.power,score:p.score,called:p.called,count:p.hand.length,hand:i===viewer?p.hand:[],backs:g.mode==='flip'&&i!==viewer?p.hand.map(c=>face(c,1-g.side)):[]})),side:g.side,color:g.color,dir:g.dir,turn:g.turn,round:g.round,phase:g.phase,stacking:g.stacking,match500:g.match500,jumpIn:g.jumpIn,finishMode:g.finishMode,rankings:g.rankings,roundPoints:g.roundPoints,pending:g.pending?{amount:g.pending.amount,kind:g.pending.kind,source:g.pending.source,target:g.pending.target,color:g.pending.color,challenge:g.pending.challenge}:null,drawn:viewer===g.turn?g.drawn:null,unoVulnerable:g.unoVulnerable,winner:g.winner,matchWinner:g.matchWinner,events:g.events,revision:g.revision,top:g.discard.at(-1)!,deckCount:g.deck.length,discardCount:g.discard.length,legal:g.players[viewer]?.hand.map(c=>({id:c.id,jump:canJump(g,viewer,c),normal:canPlay(g,viewer,c,false),flex:canPlay(g,viewer,c,true)}))??[],reveal:g.reveal?.viewer===viewer?g.reveal.faces:null};
+ const g=normalize({...original});return {mode:g.mode,players:g.players.map((p,i)=>({name:p.name,avatar:p.avatar,power:p.power,score:p.score,called:p.called,count:p.hand.length,hand:i===viewer?p.hand:[],backs:g.mode==='flip'&&i!==viewer?p.hand.map(c=>face(c,1-g.side)):[]})),side:g.side,color:g.color,dir:g.dir,turn:g.turn,round:g.round,phase:g.phase,stacking:g.stacking,match500:g.match500,jumpIn:g.jumpIn,finishMode:g.finishMode,rankings:g.rankings,roundPoints:g.roundPoints,pending:g.pending?{amount:g.pending.amount,kind:g.pending.kind,source:g.pending.source,target:g.pending.target,color:g.pending.color,challenge:g.pending.challenge}:null,drawn:viewer===g.turn?g.drawn:null,unoVulnerable:g.unoVulnerable,winner:g.winner,matchWinner:g.matchWinner,events:g.events,revision:g.revision,top:g.discard.at(-1)!,deckCount:g.deck.length,discardCount:g.discard.length,legal:g.players[viewer]?.hand.map(c=>({id:c.id,jump:canJump(g,viewer,c),normal:canPlay(g,viewer,c,false),flex:canPlay(g,viewer,c,true),normalReason:playRejectionReason(g,viewer,c,false),flexReason:playRejectionReason(g,viewer,c,true)}))??[],reveal:g.reveal?.viewer===viewer?g.reveal.faces:null};
 }
 export type GameView=ReturnType<typeof viewGame>;
